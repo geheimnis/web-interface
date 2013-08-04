@@ -7,15 +7,16 @@ class IO{
     );
 
     private $configs = array(
-        'template'=>null,
         'INCPATH'=>null,
     );
+
+    private $cookies = array();
+    private $update_cookies = false;
     
     public function __construct(){
-        global $_SERVER, $_COOKIE, $_CONFIGS;
+        global $_SERVER;
 
         $this->configs = array(
-            'template'=>$_CONFIGS['template'],
             'INCPATH'=>dirname(__FILE__),
         );
 
@@ -25,6 +26,9 @@ class IO{
             $_SERVER['HTTP_HOST'] == 'localhost'
         );
 
+        # read cookies
+        $this->_read_cookies();
+
     }
 
     public function getFlag($query){
@@ -33,6 +37,29 @@ class IO{
         } else {
             return null;
         }
+    }
+
+    private function _read_cookies(){
+        global $_COOKIE, $_CONFIGS;
+        $name_data = $_CONFIGS['names']['cookie']['data'];
+        $name_check = $_CONFIGS['names']['cookie']['check'];
+
+        $cookie_data = 
+            isset($_COOKIE[$name_data])?$_COOKIE[$name_data]:false;
+        $cookie_check =
+            isset($_COOKIE[$name_check])?$_COOKIE[$name_check]:false;
+
+        if(
+            hash_hmac(
+                $_CONFIGS['security']['cookie']['HMAC_algorithm'],
+                $cookie_data,
+                $_CONFIGS['security']['cookie']['sign_key'],
+                false,
+            ) == $cookie_check
+        ){
+            # then the cookie is regarded as trustful.
+        }
+
     }
 
     private function _outputHTML(){
