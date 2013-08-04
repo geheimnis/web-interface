@@ -120,10 +120,10 @@ class IO{
             $_CONFIGS['template']['template_path']
         );
         $twig = new Twig_Environment($loader, array(
-            'cache'=>
+/*            'cache'=>
                 $this->configs['INCPATH'] .
                 '/../' .
-                $_CONFIGS['template']['cache_path'],
+                $_CONFIGS['template']['cache_path'],*/
             'debug'=>false,
         ));
 
