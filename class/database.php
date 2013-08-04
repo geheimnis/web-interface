@@ -24,16 +24,27 @@ class DATABASE_RESULT{
         }
     }
 
-    public function all(){
+    public function row(){
+        $retval = null;
         switch($database_type){
             case('mysql'):
-                
+                $retval = mysqli_fetch_assoc($this->result_obj);
                 break;
             case('sqlite'):
+                $retval = sqlite_fetch_array($this->result_obj, SQLITE_ASSOC);
+                if($retval === false) $retval = null;  # fuck PHP!
                 break;
             default:
                 break;
         }
+        return $retval;
+    }
+
+    public function all(){
+        $retval = array();
+        while($row = $this->row())
+            $retval[] = $row;
+        return $retval;
     }
 }
 
@@ -67,6 +78,49 @@ class DATABASE{
     public function __destruct(){
         if($this->database_type == 'mysql')
             $this->database->close();
+    }
+
+    public function select($table, $where, $fields='*', $append=''){
+        if(is_array($fields)) $fields = implode(',', $fields);
+        $sql = "SELECT " . trim($fields) . " FROM " . trim($table) .
+            " WHERE " . $where;
+        if($append) $sql .= " " . $append;
+        
+        return $this->_sql_query($sql);
+    }
+
+    public function delete($table, $where=false){
+        $sql = "DELETE FROM " . $table;
+        if($where !== false) $sql .= " WHERE " . $where;
+        return $this->_sql_query($sql);
+    }
+
+    public function insert($table, $data_array){
+        $sql = "INSERT INTO " . $table;
+
+        $keys = $values = '';
+        foreach($data_array as $key=>$value){
+            $keys .= ",'" . $key . "'";
+            $values = ",'" . $value . "'";
+        }
+        $sql .= "(" . substr($keys,1) . ") VALUES(" . substr($values,1) . ")";
+
+        return $this->_sql_query($sql);
+    }
+
+    public function update($table, $set, $where=false){
+        $sql = "UPDATE " . $table . " SET ";
+
+        $sets = '';
+        foreach($set as $key=>$value){
+            $sets .= ",'" . $key . "' = '" . $value . "'";
+        }
+        $sql .= substr($sets,1);
+
+        if($where !== false)
+            $sql .= " WHERE " . $where;
+
+        return $this->_sql_query($sql);
     }
 
     private function _sql_query($sql){
