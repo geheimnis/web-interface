@@ -1,3 +1,28 @@
-{% include "overall.head.htm" %}    
-<h1>Hello, world! Hello</h1>
-{% include "overall.foot.htm" %}
+{% extends "_.base.htm" %}
+{% block title %}首页{% endblock %}
+{% block body %}
+<div class="container">
+    {% include "_.navbar.htm" %}
+    <div class="row">
+        <div class="col-lg-2">
+            <ul class="nav nav-pills nav-stacked">
+              <li class="active"><a href="#">基本信息</a></li>
+              <li><a href="#">运行状态</a></li>
+              <li><a href="#">使用状态</a></li>
+            </ul>
+        </div>
+        <div class="col-lg-10">
+            <table class="table">
+                <tr>
+                    <td>你</td>
+                    <td>我</td>
+                </tr>
+                <tr>
+                    <td>你</td>
+                    <td>我</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
