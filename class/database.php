@@ -27,6 +27,7 @@ class DATABASE_RESULT{
     public function all(){
         switch($database_type){
             case('mysql'):
+                
                 break;
             case('sqlite'):
                 break;
@@ -89,11 +90,11 @@ class DATABASE{
         try{
             switch($this->database_type){
                 case('mysql'):
-                    $mysqli = mysqli(
+                    $mysqli = new mysqli(
                         $param['host'],
                         $param['user'],
                         $param['password'],
-                        $param['database'],
+                        $param['database']
                     );
                     if($mysqli->connect_errno)
                         return null;

@@ -5,6 +5,6 @@ $_CONFIGS['database'] = array(
         'host'=>'localhost',
         'user'=>'root',
         'password'=>'orxszlyzr',
-        'database'=>'geheminis',
+        'database'=>'geheimnis',
     ),
 );
