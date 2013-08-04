@@ -31,6 +31,11 @@ class IO{
 
     }
 
+    public function output_HTML($page_name){
+        $this->_cookies_write();
+        $this->_output_HTML($page_name);
+    }
+
     public function flag($query){
         if(in_array($query, $this->flags, true)){
             return $this->flags[$query];
@@ -107,18 +112,23 @@ class IO{
         );
     }
 
-    private function _output_HTML(){
+    private function _output_HTML($page_name){
+        global $_CONFIGS;
         $loader = new Twig_Loader_Filesystem(
             $this->configs['INCPATH'] .
-            '../' .
-            $this->configs['template']['template_path']
+            '/../' .
+            $_CONFIGS['template']['template_path']
         );
         $twig = new Twig_Environment($loader, array(
-            'cache' =>
+            'cache'=>
                 $this->configs['INCPATH'] .
-                '../' .
-                $this->configs['template']['cache_path'],
+                '/../' .
+                $_CONFIGS['template']['cache_path'],
+            'debug'=>false,
         ));
+
+        $template = $twig->loadTemplate($page_name . '.htm');
+        echo $template->render(array());
     }
 
 }
