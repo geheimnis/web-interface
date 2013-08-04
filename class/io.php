@@ -27,11 +27,11 @@ class IO{
         );
 
         # read cookies
-        $this->_read_cookies();
+        $this->_cookies_read();
 
     }
 
-    public function getFlag($query){
+    public function flag($query){
         if(in_array($query, $this->flags, true)){
             return $this->flags[$query];
         } else {
@@ -39,7 +39,20 @@ class IO{
         }
     }
 
-    private function _read_cookies(){
+    public function cookie($key, $value=null){
+        if($value != null){
+            $this->cookies[$key] = $value;
+            $this->update_cookies = true;
+            return $this;
+        } else {
+            if(array_key_exists($key, $this->cookies))
+                return $this->cookies[$key];
+            else
+                return null;
+        }
+    }
+
+    private function _cookies_read(){
         global $_COOKIE, $_CONFIGS;
         $name_data = $_CONFIGS['names']['cookie']['data'];
         $name_check = $_CONFIGS['names']['cookie']['check'];
@@ -54,15 +67,47 @@ class IO{
                 $_CONFIGS['security']['cookie']['HMAC_algorithm'],
                 $cookie_data,
                 $_CONFIGS['security']['cookie']['sign_key'],
-                false,
+                false
             ) == $cookie_check
         ){
             # then the cookie is regarded as trustful.
+            $this->cookies = json_decode($cookie_data, true);
+            $this->update_cookies = false;
+        } else {
+            $this->cookies = array();
+            $this->update_cookies = true;
         }
-
     }
 
-    private function _outputHTML(){
+    private function _cookies_write(){
+        global $_CONFIGS;
+        if($this->update_cookies === false) return;
+
+        $cookie_data = json_encode($this->cookies);
+        $cookie_check = hash_hmac(
+            $_CONFIGS['security']['cookie']['HMAC_algorithm'],
+            $cookie_data,
+            $_CONFIGS['security']['cookie']['sign_key'],
+            false
+        );
+
+        $cookie_expire = ($_CONFIGS['security']['cookie']['life'] > 0)?
+            (time() + $_CONFIGS['security']['cookie']['life']):0;
+
+        setcookie(
+            $_CONFIGS['names']['cookie']['data'],
+            $cookie_data,
+            $cookie_expire
+        );
+
+        setcookie(
+            $_CONFIGS['names']['cookie']['check'],
+            $cookie_check,
+            $cookie_expire
+        );
+    }
+
+    private function _output_HTML(){
         $loader = new Twig_Loader_Filesystem(
             $this->configs['INCPATH'] .
             '../' .
@@ -77,3 +122,5 @@ class IO{
     }
 
 }
+
+$__IO = new IO();

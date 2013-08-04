@@ -4,5 +4,9 @@ $_CONFIGS['security'] = array(
     'cookie'=>array(
         'sign_key'=>'TEST-ONLY-COOKIE-SIGN-KEY',
         'HMAC_algorithm'=>'whirlpool',
+        'life'=>86400,
+    ),
+    'session'=>array(
+        'id_hash_algorithm'=>'sha1',
     ),
 );

@@ -10,5 +10,5 @@ require("$_INCPATH/lib/Twig/Autoloader.php");
 Twig_Autoloader::register();
 
 require("$_INCPATH/class/io.php");
-$_IO = new IO();
-
+require("$_INCPATH/class/session_manager.php");
+require("$_INCPATH/class/database.php");
