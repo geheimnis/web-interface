@@ -12,6 +12,8 @@ class IO{
 
     private $cookies = array();
     private $update_cookies = false;
+
+    private $side = 'front';
     
     public function __construct(){
         global $_SERVER;
@@ -42,6 +44,13 @@ class IO{
         } else {
             return null;
         }
+    }
+
+    public function set_side($side){
+        if($side == 'end')
+            $this->side = 'end';
+        else
+            $this->side = 'front';
     }
 
     public function cookie($key, $value=null){
@@ -117,7 +126,9 @@ class IO{
         $loader = new Twig_Loader_Filesystem(
             $this->configs['INCPATH'] .
             '/../' .
-            $_CONFIGS['template']['template_path']
+            $_CONFIGS['template']['template_path'] .
+            '/' . ($this->side) .
+            'end'
         );
         $twig = new Twig_Environment($loader, array(
 /*            'cache'=>
