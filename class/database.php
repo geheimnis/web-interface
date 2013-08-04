@@ -24,7 +24,16 @@ class DATABASE_RESULT{
         }
     }
 
-    public function 
+    public function all(){
+        switch($database_type){
+            case('mysql'):
+                break;
+            case('sqlite'):
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 /*
@@ -43,13 +52,18 @@ class DATABASE{
         global $_CONFIGS;
 
         $this->database_type = strtolower($_CONFIGS['database']['type']);
+        if(!in_array(
+            $this->database_type,
+            array('mysql', 'sqlite')
+        ))
+            $this->database_type = null;
+
         $this->database = $this->_connect_database(
             $_CONFIGS['database']['connection']
         );
     }
 
     public function __destruct(){
-        if($this->database == null) return;
         if($this->database_type == 'mysql')
             $this->database->close();
     }
@@ -57,11 +71,18 @@ class DATABASE{
     private function _sql_query($sql){
         switch($this->database_type){
             case('mysql'):
-                
+                $result = $this->database->query($sql);
+                break;
+            case('sqlite'):
                 break;
             default:
                 return null;
         }
+        $retval = new DATABASE_RESULT(
+            $this->database_type,
+            $result
+        );
+        return $retval;
     }
 
     private function _connect_database($param){
