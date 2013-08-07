@@ -2,13 +2,13 @@
     <div class="row">
         <div class="col-lg-2">
             <ul class="nav nav-pills nav-stacked ga-paging-links" data-pagegroup="contact">
-              <li><a href="#">全部成员</a></li>
-              <li><a href="#">查找成员</a></li>
-              <li><a href="#">添加成员</a></li>
+              <li name="all-member"><a href="#">全部成员</a></li>
+              <li name="find-member"><a href="#">查找成员</a></li>
+              <li name="add-member"><a href="#">添加成员</a></li>
             </ul>
         </div>
-        <div class="col-lg-10">
-            <h3>您可以通过本界面检查系统设置。</h3>
+        <div class="col-lg-10 ga-paging-page" data-pagegroup="contact" data-pagename="all-member">
+            <h3>成员列表</h3>
             <table class="table">
                 <thead>
                 <tr><th>你</th><th>我</th></tr>
