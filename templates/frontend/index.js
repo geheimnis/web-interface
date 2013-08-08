@@ -29,5 +29,6 @@ $(function(){
         $('#page-home').hide();
         $('#page-content').show();
         $('.navbar > .ga-paging-links > li[name="' + $(this).attr('data-index') + '"]').click();
+        if($.support.fullscreen) $('body').fullScreen({background: '#FFFFFF'});
     });
 });
