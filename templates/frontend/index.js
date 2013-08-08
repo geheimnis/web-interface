@@ -22,7 +22,7 @@ $(function(){
         var page_group_name = $(this).attr('data-pagegroup');
         $(this).children('li').click(function(){
             page_switch(this, page_group_name);
-        });
+        })[0].click();
     });
 
     $('.ga-index').click(function(){
