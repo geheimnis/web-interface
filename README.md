@@ -16,3 +16,7 @@ more fancy.
 
 The web UI also implements necessary logics, that is needed in cooperating with core commands and database. For example, a auditing part is needed, to
 require and confirm user's intent.
+
+Additional Requirements
+-----------------------
+* _msgpack-php_ You may have to compile out a _msgpack.so_ by yourself, and remember to modify _php.ini_.
