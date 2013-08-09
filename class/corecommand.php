@@ -25,7 +25,8 @@ class CORE_COMMAND{
 
     private function _execute($command){
         $result = array();
-        exec($this->basepath . $command, $result);
+        $command = 'python ' . $this->basepath . $command;
+        exec($command, $result);
         return implode("\n", $result);
     }
 
