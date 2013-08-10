@@ -50,8 +50,8 @@ class IO{
     }
 
     public function set_side($side){
-        if($side == 'end')
-            $this->side = 'end';
+        if($side == 'back')
+            $this->side = 'back';
         else
             $this->side = 'front';
     }
@@ -103,6 +103,7 @@ class IO{
     private function _cookies_write(){
         global $_CONFIGS;
         if($this->update_cookies === false) return;
+        if($this->deny_access === true) return;
 
         $cookie_data = json_encode($this->cookies);
         $cookie_check = hash_hmac(
