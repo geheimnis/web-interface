@@ -14,6 +14,8 @@ class IO{
     private $update_cookies = false;
 
     private $side = 'front';
+
+    private $deny_access = false;
     
     public function __construct(){
         global $_SERVER;
@@ -51,6 +53,10 @@ class IO{
             $this->side = 'end';
         else
             $this->side = 'front';
+    }
+
+    public function set_access_deny(){
+        $this->deny_access = true;
     }
 
     public function cookie($key, $value=null){
@@ -123,13 +129,19 @@ class IO{
 
     private function _output_HTML($page_name){
         global $_CONFIGS;
-        $loader = new Twig_Loader_Filesystem(
+
+        $template_path = 
             $this->configs['INCPATH'] .
             '/../' .
-            $_CONFIGS['template']['template_path'] .
-            '/' . ($this->side) .
-            'end'
-        );
+            $_CONFIGS['template']['template_path']
+        ;
+        
+        if(!$this->deny_access){
+            $template_path .= '/' . ($this->side) . 'end';
+            $page_name = 'index';
+        }
+
+        $loader = new Twig_Loader_Filesystem($template_path);
         $twig = new Twig_Environment($loader, array(
 /*            'cache'=>
                 $this->configs['INCPATH'] .
