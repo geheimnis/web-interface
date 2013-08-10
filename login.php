@@ -5,4 +5,4 @@ $__FIREWALL
     ->declare_side('back')
     ->apply();
 
-$__IO->output_HTML('index');
+$__IO->output_HTML('login');

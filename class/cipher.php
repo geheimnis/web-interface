@@ -2,12 +2,45 @@
 
 class PASSPHRASE_PROVER{
 
-    function __construct(){}
+    private $sign_key = null;
 
-    function generate($passphrase){
+    public function __construct($sign_key){
+        $this->sign_key = $sign_key;
     }
 
-    function validate($input, $evidence){
+    public function generate($passphrase){
+        $random = '';
+        for($i=0;$i<32;$i++)
+            $random .= chr(rand(0,255));
+
+        $plaintext = hash_hmac('whirlpool', $random, $this->sign_key, false);
+
+        $encryptor = new CIPHER($passphrase);
+        $ciphertext = $encryptor->encrypt($plaintext);
+
+        return base64_encode($random) . '$' . $ciphertext;
+    }
+
+    public function validate($test_passphrase, $evidence){
+        try{
+            $parts = explode('$', $evidence);
+            $random = base64_decode($parts[0]);
+            $ciphertext = $parts[1];
+
+            $decryptor = new CIPHER($test_passphrase);
+            if(false !== $plaintext = $decryptor->decrypt($ciphertext)){
+                $test_plaintext = hash_hmac(
+                    'whirlpool',
+                    $random,
+                    $this->sign_key,
+                    false
+                );
+                if($plaintext == $test_plaintext) return true;
+            }
+
+        } catch (Exception $e){
+        }
+        return false;
     }
 
 }
@@ -99,7 +132,7 @@ class CIPHER{
         if($checksum_got == $checksum)
             return $plaintext;
         else
-            return False;
+            return false;
     }
 
 }

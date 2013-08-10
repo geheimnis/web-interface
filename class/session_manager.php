@@ -6,6 +6,30 @@ class SESSION_MANAGER{
 
     }
 
+    public function login($username, $password){
+        global $__DATABASE;
+        $result = $__DATABASE->select(
+            'accounts',
+            'username="' . md5(strtolower(trim($username))) . '"',
+            'id,authproof'
+        );
+        $row = $result->row();
+
+        $authresult = false;
+        if($row){
+            $authproof = $row['authproof'];
+            $passprover = new PASSPHRASE_PROVER();
+            $authresult = 
+                (true === $passprover->validate($password, $authproof));
+        }
+
+        if(true === $authresult){
+            # issue Token
+            
+        } else
+            return false;
+    }
+
     private function _auth_by_cookie(){
         global $__IO;
 
