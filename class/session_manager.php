@@ -1,4 +1,34 @@
 <?php
+class TOKEN{
+    
+    public function __construct($token_string=null){
+        if($token_string)
+            $this->_load_token($token_string);
+    }
+
+    public function generate($username, $userid, $ua_pattern, $life){
+        
+    }
+
+    public function discard($discard_key){
+        global $__DATABASE;
+        $__DATABASE->delete(
+            'sessions',
+            'discard_key_checksum="' . md5($discard_key) . '"'
+        );
+        $time = time();
+        $__DATABASE->delete(
+            'sessions',
+            'expire < ' . $time
+        );
+        return $this;
+    }
+
+    private function _load_token($token_string){
+    }
+
+}
+
 class SESSION_MANAGER{
 
     public function __construct(){
