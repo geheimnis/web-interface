@@ -14,3 +14,4 @@ require("$_INCPATH/class/io.php");
 require("$_INCPATH/class/session_manager.php");
 require("$_INCPATH/class/core_command.php");
 require("$_INCPATH/class/cipher.php");
+require("$_INCPATH/class/firewall.php");

@@ -25,9 +25,9 @@ class IO{
         );
 
         # prelimary decision of local visit. NOT reliable.
-        $this->flags['local_visit'] == (
-            $_SERVER['REMOTE_ADDR'] == '127.0.0.1' &&
-            $_SERVER['HTTP_HOST'] == 'localhost'
+        $this->flags['local_visit'] = (
+            ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') &&
+            (substr($_SERVER['HTTP_HOST'],0,9) == 'localhost')
         );
 
         # read cookies
@@ -41,7 +41,7 @@ class IO{
     }
 
     public function flag($query){
-        if(in_array($query, $this->flags, true)){
+        if(array_key_exists($query, $this->flags)){
             return $this->flags[$query];
         } else {
             return null;
