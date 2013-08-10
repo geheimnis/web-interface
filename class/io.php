@@ -36,6 +36,7 @@ class IO{
     }
 
     public function output_HTML($page_name){
+        $this->_headers_write();
         $this->_cookies_write();
         $this->_output_HTML($page_name);
     }
@@ -125,6 +126,11 @@ class IO{
             $cookie_check,
             $cookie_expire
         );
+    }
+
+    private function _headers_write(){
+        if($this->deny_access)
+            header('HTTP/1.1 401 Unauthorized', true, 401);
     }
 
     private function _output_HTML($page_name){
