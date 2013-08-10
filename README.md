@@ -20,3 +20,4 @@ require and confirm user's intent.
 Additional Requirements
 -----------------------
 * _msgpack-php_ You may have to compile out a _msgpack.so_ by yourself, and remember to modify _php.ini_.
+* _mcrypt-php_
