@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Geheimnis</title>
+<title>Geheimnis - Backend</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="static/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <script src="static/js/jquery.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
-<script src="static/js/jquery.fullscreen.js"></script>
 <script>
 {% include "index.js" %}
 </script>
@@ -20,15 +19,8 @@
 <strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
 </div>
 <div id="root">
-    <div id="page-home">
-        {% include "index.index.htm" %}
-    </div>
     <div id="page-content">
         {% include "_.navbar.htm" %}
-        <div id="page-content-contact">{% include "index.contact.htm" %}</div>
-        <div id="page-content-codebook">{% include "index.codebook.htm" %}</div>
-        <div id="page-content-pkicomm">{% include "index.pkicomm.htm" %}</div>
-        <div id="page-content-tool">{% include "index.tool.htm" %}</div>
     </div>
 </div>
 
