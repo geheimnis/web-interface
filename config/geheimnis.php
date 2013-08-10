@@ -1,4 +1,4 @@
 <?php
 $_CONFIGS['geheimnis'] = array(
-    'core_path' = '../core-commands',
+    'core_path'=>'../core-commands',
 );

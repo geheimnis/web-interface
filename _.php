@@ -12,3 +12,4 @@ Twig_Autoloader::register();
 require("$_INCPATH/class/database.php");
 require("$_INCPATH/class/io.php");
 require("$_INCPATH/class/session_manager.php");
+require("$_INCPATH/class/core_command.php");
