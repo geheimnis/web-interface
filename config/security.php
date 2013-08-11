@@ -9,5 +9,6 @@ $_CONFIGS['security'] = array(
     'session'=>array(
         'id_hash_algorithm'=>'sha1',
         'sign_key'=>'TEST-ONLY-SESSION-SIGN-KEY',
+        'life'=>1800,
     ),
 );

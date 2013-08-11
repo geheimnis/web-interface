@@ -9,13 +9,16 @@ class DATABASE_RESULT{
     
     private $database_type;
     private $result_obj;
+    private $db_obj;
     
     public function __construct(
         $database_type,
-        $result_obj
+        $result_obj,
+        $db_obj
     ){
         $this->database_type = $database_type;
         $this->result_obj = $result_obj;
+        $this->db_obj = $db_obj;
     }
 
     public function __destruct(){
@@ -44,6 +47,23 @@ class DATABASE_RESULT{
         $retval = array();
         while($row = $this->row())
             $retval[] = $row;
+        return $retval;
+    }
+
+    public function insert_id(){
+        $retval = null;
+        switch($database_type){
+            case('mysql'):
+                $retval = mysqli_insert_id($this->result_obj);
+                break;
+            case('sqlite'):
+                $retval = sqlite_last_insert_rowid(
+                    $this->db_obj
+                );
+                break;
+            default:
+                break;
+        }
         return $retval;
     }
 }
@@ -135,7 +155,8 @@ class DATABASE{
         }
         $retval = new DATABASE_RESULT(
             $this->database_type,
-            $result
+            $result,
+            $this->database
         );
         return $retval;
     }
