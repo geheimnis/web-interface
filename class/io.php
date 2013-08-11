@@ -11,6 +11,7 @@ class IO{
     );
 
     private $cookies = array();
+    private $output_data = array();
     private $posts = array();
     private $gets = array();
     private $update_cookies = false;
@@ -77,6 +78,18 @@ class IO{
         } else {
             if(array_key_exists($key, $this->cookies))
                 return $this->cookies[$key];
+            else
+                return null;
+        }
+    }
+
+    public function data($key, $value=null){
+        if($value != null){
+            $this->output_data[$key] = $value;
+            return $this;
+        } else {
+            if(array_key_exists($key, $this->output_data))
+                return $this->output_data[$key];
             else
                 return null;
         }
@@ -195,7 +208,7 @@ class IO{
             ));
 
             $template = $twig->loadTemplate($page_name . '.htm');
-            echo $template->render(array());
+            echo $template->render($this->output_data);
         }
     }
 
