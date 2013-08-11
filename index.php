@@ -9,6 +9,7 @@ if(
     $want_side = 'back';
 
 $__FIREWALL
+    ->require_login()
     ->declare_side($want_side)
     ->apply();
     

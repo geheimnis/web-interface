@@ -135,11 +135,12 @@ class IO{
     }
 
     private function _headers_write(){
+        global $__SESSION_MANAGER;
         if($this->deny_access)
             header('HTTP/1.1 401 Unauthorized', true, 401);
         else if($this->forced_login){
             print 'enter';
-            if($this->token->is_loaded() === false){
+            if($__SESSION_MANAGER->token->is_loaded() === false){
                 header("HTTP/1.1 301 Moved Permanently");
                 header("Location: login.php");
             }
