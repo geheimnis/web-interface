@@ -108,7 +108,7 @@ class TOKEN{
 
                     $query_result = $__DATABASE->select(
                         'sessions',
-                        'id="' . $token_id . '"',
+                        'id="' . $token_id . '"'
                     );
                     if($row = $query_result->row()){
                         $userid = $row['userid'];
@@ -135,7 +135,7 @@ class TOKEN{
             $this->user_id = $userid;
             $this->encrypt_key = $this->_derive_encrypt_key(
                 $encrypt_key_server,
-                $encrypt_key_client,
+                $encrypt_key_client
             );
             $this->token_id = $token_id;
             $this->loaded = true;
