@@ -1,5 +1,7 @@
 <?php
 class TOKEN{
+
+    public $session_manager = null;
     
     private $loaded = false;
 
@@ -7,16 +9,22 @@ class TOKEN{
     private $encrypt_key = false;
     private $token_id = false;
     
-    public function __construct($token_string=null){
-        if($token_string)
-            $this->_load_token($token_string);
+    public function __construct($session_manager){
+        global $__IO;
+        $this->session_manager = $session_manager;
+        if($__IO->cookie('token'))
+            $this->_load_token(
+                $__IO->cookie('token'),
+                $this->session_manager
+            );
     }
 
-    public function generate($username, $userid, $ua_pattern){
+    public function generate($username, $userid){
         global $_CONFIGS;
 
         $random = '';
         for($i=0;$i<96;$i++) $random .= chr(rand(0,255));
+        $ua_pattern = $this->session_manager->user_agent_pattern();
 
         $encrypt_key_server = sha1(substr($random,0,32));
         $encrypt_key_client = sha1(substr($random,32,32));
@@ -45,7 +53,6 @@ class TOKEN{
         $client_key_encrypted = $client_key_encryptor->encrypt(
             $encrypt_key_client
         );
-        
 
         $__IO
             ->cookie(
@@ -57,7 +64,7 @@ class TOKEN{
         $this->user_id = $userid;
         $this->encrypt_key = $this->_derive_encrypt_key(
             $encrypt_key_server,
-            $encrypt_key_client,
+            $encrypt_key_client
         );
         $this->token_id = $record_id;
 
@@ -78,7 +85,63 @@ class TOKEN{
         return $this;
     }
 
-    private function _load_token($token_string){
+    private function _load_token($token){
+        global $__DATABASE;
+
+        $userid = $token_id = $encrypt_server_key = $encrypt_client_key =
+            false;
+        $loaded = false;
+
+        try{
+            $parsed_token = explode('*', $token);
+            $token_id = $parsed_token[0];
+            $client_key_encrypted = $parsed_token[1];
+
+            if(is_numeric($token_id)){
+                $client_key_decryptor = new CIPHER(
+                    $this->session_manager->user_agent_pattern()
+                );
+                $encrypt_key_client =
+                    $client_key_decryptor->decrypt($client_key_encrypted);
+
+                if($encrypt_key_client){
+
+                    $query_result = $__DATABASE->select(
+                        'sessions',
+                        'id="' . $token_id . '"',
+                    );
+                    if($row = $query_result->row()){
+                        $userid = $row['userid'];
+                        $encrypt_key_server = $row['encrypt_key_server'];
+                        $encrypt_key_checksum =
+                            $row['encrypt_key_client_checksum'];
+                        $encrypt_key_checksum_test = hash_hmac(
+                            'sha1',
+                            $encrypt_key_client,
+                            $_CONFIGS['security']['session']['sign_key']
+                        );
+
+                        $loaded = (
+                            $encrypt_key_checksum ==
+                            $encrypt_key_checksum_test
+                        );
+                    }
+                }
+            }
+        } catch(Exception $e){
+        }
+        
+        if($loaded = true){
+            $this->user_id = $userid;
+            $this->encrypt_key = $this->_derive_encrypt_key(
+                $encrypt_key_server,
+                $encrypt_key_client,
+            );
+            $this->token_id = $token_id;
+            $this->loaded = true;
+            return true;
+        } else
+            return false;
     }
 
     private function _derive_encrypt_key($server_key, $client_key){
@@ -104,7 +167,7 @@ class SESSION_MANAGER{
 
     public function __construct(){
         global $__IO;
-
+        $this->token = new TOKEN($this);
     }
 
     public function login($username, $password){
@@ -126,23 +189,16 @@ class SESSION_MANAGER{
         }
 
         if(true === $authresult){
-            $this->token = new TOKEN();
             $this->token->generate(
                 base64_encode(trim($username)),
-                $row['id'],
-                $this->_user_agent_pattern(),
+                $row['id']
             );
             return true;
         } else
             return false;
     }
 
-    private function _auth_by_cookie(){
-        global $__IO;
-        $token = 
-    }
-
-    private function _user_agent_pattern(){
+    public function user_agent_pattern(){
         global $_SERVER, $_CONFIGS;
         $wanted = array(
             'REMOTE_ADDR',
