@@ -155,11 +155,10 @@ class IO{
             '/../' .
             $_CONFIGS['template']['template_path']
         ;
-        
-        if(!$this->deny_access){
+        if(!$this->deny_access)
             $template_path .= '/' . ($this->side) . 'end';
+        else
             $page_name = 'index';
-        }
 
         if(!$this->forced_login){
             $loader = new Twig_Loader_Filesystem($template_path);
