@@ -11,10 +11,13 @@
 $(function(){
     $('#jswarn').hide();
     $('#root').show();
+    $('#secwarn-understand').click(function(){
+        $('#ui').show();
+    });
 });
 </script>
 <style>
-    #root{display: none;}
+    #root,#ui{display: none;}
 </style>
 </head>
 <body>
@@ -22,8 +25,7 @@ $(function(){
 <strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
 </div>
 <div id="root" class="container">
-    <p>登录
-    </p>
+    <h1>登录 - Geheimnis系统核心界面</h1>
 
     <div class="alert alert-info">
       <h3>安全警告</h3> 
@@ -33,17 +35,18 @@ $(function(){
           <li>如果您在不安全的计算机上登录，则全部机密信息都将泄漏;</li>
           <li>对于不安全的计算机，应当访问Geheimnis系统的前端界面。</li>
       </ul>
-      请您确认，您<strong>没有</strong>在不安全的计算机上登录本界面。</p>
-    <p style="text-align: right">
-      <button type="button" class="btn btn-danger">转往前端界面</button>
-      <button type="button" class="btn" data-dismiss="alert">我已充分了解并为此负责</button>
-    </p>
+      <p>请您确认，您<strong>没有</strong>在不安全的计算机上登录本界面。</p>
+      <button id="secwarn-frontend" type="button" class="btn btn-danger">转往前端界面</button>
+      <button id="secwarn-understand" type="button" class="btn btn-success" data-dismiss="alert">我已充分了解并为此负责</button>
+      <h3></h3>
     </div>
-    
-    <ul class="nav nav-pills">
-      <li class="active"><a href="#">登录</a></li>
-      <li><a href="#">注册</a></li>
-    </ul>
+   
+    <div id="ui">
+        <ul class="nav nav-pills">
+          <li class="active"><a href="#">登录</a></li>
+          <li><a href="#">注册</a></li>
+        </ul>
+    </div>
 
 </div>
 </body>
