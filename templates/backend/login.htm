@@ -1,1 +1,50 @@
-Login.
+<!DOCTYPE html>
+<html>
+<head>
+<title>Geheimnis - Backend - Login</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="static/css/bootstrap.min.cosmo.css" rel="stylesheet" media="screen">
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script>
+$(function(){
+    $('#jswarn').hide();
+    $('#root').show();
+});
+</script>
+<style>
+    #root{display: none;}
+</style>
+</head>
+<body>
+<div id="jswarn" class="alert alert-danger">
+<strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
+</div>
+<div id="root" class="container">
+    <p>登录
+    </p>
+
+    <div class="alert alert-info">
+      <h3>安全警告</h3> 
+      <p>您正在登录Geheimnis核心管理界面。</p>
+      <ul>
+          <li>这一界面处理机密信息，只应当在Geheimnis系统的终端上显示;</li>
+          <li>如果您在不安全的计算机上登录，则全部机密信息都将泄漏;</li>
+          <li>对于不安全的计算机，应当访问Geheimnis系统的前端界面。</li>
+      </ul>
+      请您确认，您<strong>没有</strong>在不安全的计算机上登录本界面。</p>
+    <p style="text-align: right">
+      <button type="button" class="btn btn-danger">转往前端界面</button>
+      <button type="button" class="btn" data-dismiss="alert">我已充分了解并为此负责</button>
+    </p>
+    </div>
+    
+    <ul class="nav nav-pills">
+      <li class="active"><a href="#">登录</a></li>
+      <li><a href="#">注册</a></li>
+    </ul>
+
+</div>
+</body>
+</html>
