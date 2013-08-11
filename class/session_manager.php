@@ -1,6 +1,12 @@
 <?php
 class TOKEN{
     
+    private $loaded = false;
+
+    private $user_id = false;
+    private $encrypt_key = false;
+    private $token_id = false;
+    
     public function __construct($token_string=null){
         if($token_string)
             $this->_load_token($token_string);
@@ -47,6 +53,15 @@ class TOKEN{
                 $record_id . '*' . $client_key_encrypted)
             ->cookie('discard_token', $discard_key)
         ;
+
+        $this->user_id = $userid;
+        $this->encrypt_key = $this->_derive_encrypt_key(
+            $encrypt_key_server,
+            $encrypt_key_client,
+        );
+        $this->token_id = $record_id;
+
+        $this->loaded = true;
     }
 
     public function discard($discard_key){
@@ -66,6 +81,21 @@ class TOKEN{
     private function _load_token($token_string){
     }
 
+    private function _derive_encrypt_key($server_key, $client_key){
+        return hash('whirlpool', $server_key . $client_key, true);
+    }
+
+    public function is_loaded(){
+        return $this->loaded;
+    }
+
+    public function get_user_id(){
+        return $this->user_id;
+    }
+
+    public function get_token_id(){
+        return $this->token_id;
+    }
 }
 
 class SESSION_MANAGER{
