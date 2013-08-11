@@ -16,6 +16,7 @@ class IO{
     private $side = 'front';
 
     private $deny_access = false;
+    private $forced_login = false;
     
     public function __construct(){
         global $_SERVER;
@@ -58,6 +59,10 @@ class IO{
 
     public function set_access_deny(){
         $this->deny_access = true;
+    }
+
+    public function set_force_login(){
+        $this->forced_login = true;
     }
 
     public function cookie($key, $value=null){
@@ -132,6 +137,13 @@ class IO{
     private function _headers_write(){
         if($this->deny_access)
             header('HTTP/1.1 401 Unauthorized', true, 401);
+        else if($this->forced_login){
+            print 'enter';
+            if($this->token->is_loaded() === false){
+                header("HTTP/1.1 301 Moved Permanently");
+                header("Location: login.php");
+            }
+        }
     }
 
     private function _output_HTML($page_name){
@@ -148,17 +160,19 @@ class IO{
             $page_name = 'index';
         }
 
-        $loader = new Twig_Loader_Filesystem($template_path);
-        $twig = new Twig_Environment($loader, array(
-/*            'cache'=>
-                $this->configs['INCPATH'] .
-                '/../' .
-                $_CONFIGS['template']['cache_path'],*/
-            'debug'=>false,
-        ));
+        if(!$this->forced_login){
+            $loader = new Twig_Loader_Filesystem($template_path);
+            $twig = new Twig_Environment($loader, array(
+                /* 'cache'=>
+                    $this->configs['INCPATH'] .
+                    '/../' .
+                    $_CONFIGS['template']['cache_path'],*/
+                'debug'=>false,
+            ));
 
-        $template = $twig->loadTemplate($page_name . '.htm');
-        echo $template->render(array());
+            $template = $twig->loadTemplate($page_name . '.htm');
+            echo $template->render(array());
+        }
     }
 
 }
