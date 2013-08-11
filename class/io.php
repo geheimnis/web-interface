@@ -11,6 +11,8 @@ class IO{
     );
 
     private $cookies = array();
+    private $posts = array();
+    private $gets = array();
     private $update_cookies = false;
 
     private $side = 'front';
@@ -31,8 +33,10 @@ class IO{
             (substr($_SERVER['HTTP_HOST'],0,9) == 'localhost')
         );
 
-        # read cookies
+        # read
         $this->_cookies_read();
+        $this->_posts_read();
+        $this->_gets_read();
 
     }
 
@@ -76,6 +80,26 @@ class IO{
             else
                 return null;
         }
+    }
+
+    public function post($key){
+        if(array_key_exists($key, $this->posts)) return $this->posts[$key];
+        return null;
+    }
+
+    public function get($key){
+        if(array_key_exists($key, $this->gets)) return $this->gets[$key];
+        return null;
+    }
+
+    private function _posts_read(){
+        global $_POST;
+        $this->posts = $_POST;
+    }
+
+    private function _gets_read(){
+        global $_GET;
+        $this->gets = $_GET;
     }
 
     private function _cookies_read(){
