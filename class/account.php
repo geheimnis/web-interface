@@ -65,7 +65,7 @@ class ACCOUNT{
             }
         } else if(is_array($data)){
             $data_id = $data['id'];
-            $data_username_human = $data['username_human'];
+            $data_username_human = base64_decode($data['username_human']);
             $data_username_php = $data['username'];
         }
         
@@ -87,7 +87,7 @@ class ACCOUNT{
         return $this->loaded;
     }
 
-    public function login($username, $password){
+    public function login($username, $passphrase){
         global $__DATABASE;
         $username_phped = md5(strtolower(trim($username)));
         
@@ -102,7 +102,7 @@ class ACCOUNT{
         if($row){
             $authproof = $row['authproof'];
             $authresult = 
-                (true === $this->_passphrase_validate($password, $authproof));
+                (true === $this->_passphrase_validate($passphrase, $authproof));
         }
 
         if(true === $authresult){
@@ -116,7 +116,37 @@ class ACCOUNT{
         return false;
     }
 
-    public function create($username, $password){
+    public function create($username, $passphrase){
+        global $__DATABASE;
+        $username_trimed = trim($username);
+        if(!$this->_is_legal_username($username_trimed)) return false;
+        $username_human = base64_encode($username_trimed);
+
+        $username_phped = md5(strtolower(trim($username)));
+        
+        $result = $__DATABASE->select(
+            'accounts',
+            'username="' . $username_phped . '"',
+            'id'
+        );
+        $row = $result->row();
+
+        if($row) return false;
+
+        $result = $__DATABASE->insert(
+            'accounts',
+            array(
+                'username'=>$username_phped,
+                'username_human'=>$username_human,
+                'authproof'=>$this->_passphrase_store($passphrase),
+            )
+        );
+
+        if($insert_id = $result->insert_id()){
+            return $this->initialize($insert_id);
+        }
+
+        return false;
     }
 
 
