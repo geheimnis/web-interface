@@ -93,10 +93,40 @@ $(function(){
                         <label for="input-password">密码</label>
                         <input type="password" class="form-control" name="password" id="input-password" placeholder="您的密码" required>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-default">登录</button>
                 </form>
             </div>
-            <div class="tab-pane" id="reg">...</div>
+            <div class="tab-pane" id="reg">
+                {% if option_allow_register %}
+                <form role="form" action="login.php?do=login" method="POST">
+                    <p class="help-block">
+                        请根据提示填写如下信息。所有信息必填。
+                    </p>
+                    <div class="form-group">
+                        <label for="input-username">用户名</label>
+                        <p class="help-block">
+                        用户账户用于登录本Geheimnis终端，实现对机密信息缓存的管理和会话操作。
+                        您的用户名为用户账户的标识，但可以不是您使用Geheimnis系统进行通讯时向其他人标识自己的标识。
+                        用户名仅限字母、数字、下划线，不区分大小写，长度在32个字符内。
+                        </p>
+                        <input type="text" class="form-control" name="username" id="input-username" placeholder="仅限字母、数字、下划线，不区分大小写" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-password">密码</label>
+                        <input type="password" class="form-control" name="password" id="input-password" placeholder="您的密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-password">请再输入一次确认</label>
+                        <input type="password" class="form-control" name="password2" id="input-password2" placeholder="您的密码" required>
+                    </div>
+                    <button type="submit" class="btn btn-default">注册新用户</button>
+                </form>
+                {% else %}
+                <div class="alert alert-danger">
+                    根据本Geheimnis系统终端的配置，当前没有开放注册。
+                </div>
+                {% endif %}
+            </div>
         </div>
     
     </div>
