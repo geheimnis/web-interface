@@ -11,9 +11,15 @@
 $(function(){
     $('#jswarn').hide();
     $('#root').show();
+
+{% if option_show_warning == true %}
     $('#secwarn-understand').click(function(){
         $('#ui').show();
     });
+    $('#secwarn').show();
+{% else %}
+    $('#ui').show();
+{% endif %}
 
 
     $('#operations a').click(function (e) {
@@ -23,7 +29,7 @@ $(function(){
 });
 </script>
 <style>
-    #root,#ui{display: none;}
+    #root,#ui,#secwarn{display: none;}
 </style>
 </head>
 <body>
@@ -33,7 +39,7 @@ $(function(){
 <div id="root" class="container">
     <h1>登录 - Geheimnis系统核心界面</h1>
 
-    <div class="alert alert-info">
+    <div id="secwarn" class="alert alert-info">
       <h3>安全警告</h3> 
       <p>您正在登录Geheimnis核心管理界面。</p>
       <ul>
@@ -56,7 +62,20 @@ $(function(){
 
         <div class="tab-content">
             <div class="tab-pane active" id="login">
-           xxx 
+                <form role="form" action="login.php?do=login" method="POST">
+                    <p class="help-block">
+                        您需要认证身份，以便使用Geheimnis密码系统。请输入用户名和密码。
+                    </p>
+                    <div class="form-group">
+                        <label for="input-username">用户名</label>
+                        <input type="text" class="form-control" name="username" id="input-username" placeholder="您的用户名，不是通讯系统识别名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-password">密码</label>
+                        <input type="password" class="form-control" name="password" id="input-password" placeholder="您的密码" required>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
             </div>
             <div class="tab-pane" id="reg">...</div>
         </div>

@@ -95,13 +95,21 @@ class IO{
         }
     }
 
-    public function post($key){
-        if(array_key_exists($key, $this->posts)) return $this->posts[$key];
+    public function post($key, $normalize=false){
+        if(array_key_exists($key, $this->posts))
+            return ($normalize?
+                strtolower(trim($this->posts[$key])):
+                $this->posts[$key]
+            );
         return null;
     }
 
-    public function get($key){
-        if(array_key_exists($key, $this->gets)) return $this->gets[$key];
+    public function get($key, $normalize=false){
+        if(array_key_exists($key, $this->gets))
+            return ($normalize?
+                strtolower(trim($this->gets[$key])):
+                $this->gets[$key]
+            );
         return null;
     }
 
