@@ -29,6 +29,8 @@ class TOKEN{
         for($i=0;$i<96;$i++) $random .= chr(rand(0,255));
         $ua_pattern = $this->session_manager->user_agent_pattern();
 
+        print "UA-PATTERN: $ua_pattern ::";
+
         $encrypt_key_server = sha1(substr($random,0,32));
         $encrypt_key_client = sha1(substr($random,32,32));
         $discard_key = sha1(substr($random, 64, 32));
@@ -90,7 +92,7 @@ class TOKEN{
     }
 
     private function _load_token($token){
-        global $__DATABASE;
+        global $__DATABASE, $_CONFIGS;
 
         $userid = $token_id = $encrypt_server_key = $encrypt_client_key =
             false;
@@ -129,6 +131,7 @@ class TOKEN{
                             $encrypt_key_checksum ==
                             $encrypt_key_checksum_test
                         );
+
                     }
                 }
             }
@@ -195,7 +198,6 @@ class SESSION_MANAGER{
             'HTTP_ACCEPT_LANGUAGE',
             'HTTP_ACCEPT_ENCODING',
             'HTTP_DNT',
-            'HTTP_CACHE_CONTROL',
         );
         $result = array();
         foreach($wanted as $key)
@@ -203,6 +205,7 @@ class SESSION_MANAGER{
                 array_key_exists($key, $_SERVER)?$_SERVER[$key]:'';
     
         ksort($result);
+
         $to_be_hashed = '';
         foreach($result as $key=>$value)
             $to_be_hashed .= ':' . $value;
