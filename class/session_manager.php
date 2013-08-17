@@ -19,8 +19,11 @@ class TOKEN{
             );
     }
 
-    public function generate($username, $userid){
+    public function generate($account_instance){
         global $_CONFIGS;
+
+        $user_id = $account_instance->get('id');
+        $username = $account_instance->get('username');
 
         $random = '';
         for($i=0;$i<96;$i++) $random .= chr(rand(0,255));
@@ -177,10 +180,7 @@ class SESSION_MANAGER{
         $authresult = $account->login($username, $password);
 
         if(true === $authresult){
-            $this->token->generate(
-                base64_encode(trim($username)),
-                $row['id']
-            );
+            $this->token->generate($account);
             return true;
         } else
             return false;

@@ -21,11 +21,12 @@ switch($__IO->get('do',true)){
         );
         if(!$result){
             $template_message_id = 1;
-
+            print 'Arsch!';
         }
         $template_show_warning = false;
         break;
     case 'reg':
+        $template_tab = 'reg';
         if(true === $template_allow_reg){
             $username = $__IO->post('username');
             $password = $__IO->post('password');
@@ -37,6 +38,8 @@ switch($__IO->get('do',true)){
                 $result = $account->create($username, $password);
             
                 if($result === true){
+                    $template_tab = 'login';
+                    $template_message_id = 7;
                 } else {
                     $code_map = array(
                         -1=>3,
@@ -50,7 +53,6 @@ switch($__IO->get('do',true)){
             }
         }
         $template_show_warning = false;
-        $template_tab = 'reg';
         break;
     default:
         break;

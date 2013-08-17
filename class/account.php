@@ -100,11 +100,13 @@ class ACCOUNT{
         $row = $result->row();
 
         $authresult = false;
-        if($row){
-            $authproof = $row['authproof'];
+        if($row)
             $authresult = 
-                (true === $this->_passphrase_validate($passphrase, $authproof));
-        }
+                (true === $this->_passphrase_validate(
+                    $passphrase,
+                    $row['authproof']
+                )
+            );
 
         if(true === $authresult){
             return $this->initialize(array(
@@ -161,6 +163,11 @@ class ACCOUNT{
         return -3;
     }
 
+    public function get($item){
+        if(!$this->loaded) return null;
+        if(!array_key_exists($item, $this->account_data)) return null;
+        return $this->account_data[$item];
+    }
 
     private function _passphrase_store($passphrase){
         global $_CONFIGS;
@@ -187,6 +194,9 @@ class ACCOUNT{
             $parts = explode('$', $evidence);
             $random = base64_decode($parts[0]);
             $ciphertext = $parts[1];
+
+            var_dump($parts);
+            print '<br />';
 
             $decryptor = new CIPHER($test_passphrase);
             if(false !== $plaintext = $decryptor->decrypt($ciphertext)){
