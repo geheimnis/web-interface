@@ -29,8 +29,6 @@ class TOKEN{
         for($i=0;$i<96;$i++) $random .= chr(rand(0,255));
         $ua_pattern = $this->session_manager->user_agent_pattern();
 
-        print "UA-PATTERN: $ua_pattern ::";
-
         $encrypt_key_server = sha1(substr($random,0,32));
         $encrypt_key_client = sha1(substr($random,32,32));
         $discard_key = sha1(substr($random, 64, 32));
