@@ -23,13 +23,13 @@ class DATABASE_RESULT{
 
     public function __destruct(){
         if($this->database_type == 'mysql'){
-            $result_obj->close();
+            $this->result_obj->close();
         }
     }
 
     public function row(){
         $retval = null;
-        switch($database_type){
+        switch($this->database_type){
             case('mysql'):
                 $retval = mysqli_fetch_assoc($this->result_obj);
                 break;

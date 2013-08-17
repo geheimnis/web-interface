@@ -14,6 +14,14 @@ $template_message_id = -1; # defined in template.
 # login or register logic.
 switch($__IO->get('do',true)){
     case 'login':
+        $result = $__SESSION_MANAGER->login(
+            $__IO->post('username'),
+            $__IO->post('password')
+        );
+        if(!$result){
+            $template_message_id = 1;
+
+        }
         $template_show_warning = false;
         break;
     case 'reg':
