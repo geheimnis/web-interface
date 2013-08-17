@@ -9,6 +9,7 @@ $__FIREWALL
 # template logical data
 $template_show_warning = true;
 $template_tab = 'login';
+$template_message_id = 1; # defined in template.
 
 # login or register logic.
 switch($__IO->get('do',true)){
@@ -26,6 +27,7 @@ switch($__IO->get('do',true)){
 $__IO
     ->data('option_show_warning', $template_show_warning)
     ->data('option_tab', $template_tab)
+    ->data('option_alert_message', $template_message_id)
 ;
 
 $__IO->output_HTML('login');

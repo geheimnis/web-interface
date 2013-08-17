@@ -8,6 +8,12 @@
 <script src="static/js/jquery.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script>
+var messages = {
+    1: ['用户名和密码必须全部填写。', 'danger'],
+    2: ['用户名和/或密码错误。', 'danger'],
+
+};
+
 $(function(){
     $('#jswarn').hide();
     $('#root').show();
@@ -21,17 +27,27 @@ $(function(){
     $('#ui').show();
 {% endif %}
 
-
     $('#operations a')
         .click(function(e){
             e.preventDefault();
+            $('#alertbox').hide();
             $(this).tab('show');
         })
-        .filter('[href="#{{ option_tab }}"]').tab('show');
+        .filter('[href="#{{ option_tab }}"]').tab('show')
+    ;
+
+{% if option_alert_message > 0 %}
+    $('#alertbox')
+        .addClass('alert-' + messages[{{option_alert_message}}][1])
+        .text(messages[{{option_alert_message}}][0])
+        .show()
+    ;
+{% endif %}
+
 });
 </script>
 <style>
-    #root,#ui,#secwarn{display: none;}
+    #root,#ui,#secwarn,#alertbox{display: none;}
 </style>
 </head>
 <body>
@@ -61,6 +77,8 @@ $(function(){
             <li class="active"><a href="#login">登录</a></li>
             <li><a href="#reg">注册</a></li>
         </ul>
+
+        <div id="alertbox" class="alert"></div>
 
         <div class="tab-content">
             <div class="tab-pane active" id="login">
