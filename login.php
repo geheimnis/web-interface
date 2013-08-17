@@ -26,7 +26,28 @@ switch($__IO->get('do',true)){
         $template_show_warning = false;
         break;
     case 'reg':
-        if(false === $template_allow_reg){
+        if(true === $template_allow_reg){
+            $username = $__IO->post('username');
+            $password = $__IO->post('password');
+            $password2 = $__IO->post('password2');
+            if($password2 != $password)
+                $template_message_id = 2;
+            else {
+                $account = new ACCOUNT();
+                $result = $account->create($username, $password);
+            
+                if($result === true){
+                } else {
+                    $code_map = array(
+                        -1=>3,
+                        -2=>4,
+                        -3=>5,
+                        false=>6,
+                    );
+                    $template_message_id = $code_map[$result];
+                }
+                    
+            }
         }
         $template_show_warning = false;
         $template_tab = 'reg';

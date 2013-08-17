@@ -117,9 +117,20 @@ class ACCOUNT{
     }
 
     public function create($username, $passphrase){
+        /*
+         * Create an account.
+         *
+         * Meanings of return values:
+         *   true: successfully created.
+         *     -1: invalid username
+         *     -2: username already exists.
+         *     -3: failed inserting into database.
+         *  false: error initializing a account.
+         */
+
         global $__DATABASE;
         $username_trimed = trim($username);
-        if(!$this->_is_legal_username($username_trimed)) return false;
+        if(!$this->_is_legal_username($username_trimed)) return -1;
         $username_human = base64_encode($username_trimed);
 
         $username_phped = md5(strtolower(trim($username)));
@@ -131,7 +142,7 @@ class ACCOUNT{
         );
         $row = $result->row();
 
-        if($row) return false;
+        if($row) return -2;
 
         $result = $__DATABASE->insert(
             'accounts',
@@ -146,7 +157,7 @@ class ACCOUNT{
             return $this->initialize($insert_id);
         }
 
-        return false;
+        return -3;
     }
 
 

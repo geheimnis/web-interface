@@ -10,7 +10,11 @@
 <script>
 var messages = {
     1: ['登录认证失败，请检查用户名和密码。', 'danger'],
-
+    2: ['注册失败，两次输入密码不一致。', 'danger'],
+    3: ['注册失败，用户名构成不正确。', 'danger'],
+    4: ['注册失败，用户已经存在。', 'danger'],
+    5: ['注册失败，无法存入数据库。', 'danger'],
+    6: ['未知错误', 'danger'],
 };
 
 $(function(){
@@ -98,7 +102,7 @@ $(function(){
             </div>
             <div class="tab-pane" id="reg">
                 {% if option_allow_register %}
-                <form role="form" action="login.php?do=login" method="POST">
+                <form role="form" action="login.php?do=reg" method="POST">
                     <p class="help-block">
                         请根据提示填写如下信息。所有信息必填。
                     </p>
