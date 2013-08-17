@@ -184,7 +184,6 @@ class IO{
         if($this->deny_access)
             header('HTTP/1.1 401 Unauthorized', true, 401);
         else if($this->forced_login){
-            print 'enter';
             if($__SESSION_MANAGER->token->is_loaded() === false){
                 header("HTTP/1.1 301 Moved Permanently");
                 header("Location: login.php");
