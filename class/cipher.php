@@ -47,7 +47,7 @@ class CIPHER{
             $iv
         );
 
-        $ciphertext = $iv . chr($padding_length) . $checksum . $ciphertext;
+        $ciphertext = $iv . chr($padding_length + 1) . $checksum . $ciphertext;
         
         $ciphertext_base64 = base64_encode($ciphertext);
 
@@ -68,7 +68,7 @@ class CIPHER{
         );
         
         $iv_dec = substr($ciphertext_dec, 0, $iv_size);
-        $padding_length = ord(substr($ciphertext_dec, $iv_size, 1));
+        $padding_length = ord(substr($ciphertext_dec, $iv_size, 1)) - 1;
         $checksum = substr($ciphertext_dec, $iv_size+1, 16);
         $ciphertext_dec = substr($ciphertext_dec, $iv_size+17);
 
@@ -80,7 +80,10 @@ class CIPHER{
             $iv_dec
         );
 
-        $plaintext = substr($plaintext_utf8_dec, 0, -$padding_length);
+        if($padding_length > 0)
+            $plaintext = substr($plaintext_utf8_dec, 0, -$padding_length);
+        else
+            $plaintext = $plaintext_utf8_dec;
         $checksum_got = hash('md5', $plaintext, true);
 
         if($checksum_got == $checksum)

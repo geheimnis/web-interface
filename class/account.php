@@ -195,7 +195,6 @@ class ACCOUNT{
             $random = base64_decode($parts[0]);
             $ciphertext = $parts[1];
 
-            var_dump($parts);
             print '<br />';
 
             $decryptor = new CIPHER($test_passphrase);

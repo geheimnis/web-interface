@@ -20,9 +20,9 @@ class TOKEN{
     }
 
     public function generate($account_instance){
-        global $_CONFIGS;
+        global $_CONFIGS, $__DATABASE, $__IO;
 
-        $user_id = $account_instance->get('id');
+        $userid = $account_instance->get('id');
         $username = $account_instance->get('username');
 
         $random = '';
@@ -134,7 +134,7 @@ class TOKEN{
         } catch(Exception $e){
         }
         
-        if($loaded = true){
+        if($loaded === true){
             $this->user_id = $userid;
             $this->encrypt_key = $this->_derive_encrypt_key(
                 $encrypt_key_server,
