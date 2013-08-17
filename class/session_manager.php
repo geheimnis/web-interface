@@ -19,7 +19,7 @@ class TOKEN{
             );
     }
 
-    public function generate($account_instance){
+    public function issue($account_instance){
         global $_CONFIGS, $__DATABASE, $__IO;
 
         $userid = $account_instance->get('id');
@@ -37,7 +37,6 @@ class TOKEN{
             'sessions',
             array(
                 'userid'=>$userid,
-                'data'=>'',
                 'encrypt_key_server'=>$encrypt_key_server,
                 'encrypt_key_client_checksum'=>
                     hash_hmac(
@@ -72,6 +71,8 @@ class TOKEN{
         $this->token_id = $record_id;
 
         $this->loaded = true;
+
+        return $this->loaded;
     }
 
     public function discard($discard_key){
@@ -180,8 +181,7 @@ class SESSION_MANAGER{
         $authresult = $account->login($username, $password);
 
         if(true === $authresult){
-            $this->token->generate($account);
-            return true;
+            return $this->token->issue($account);
         } else
             return false;
     }

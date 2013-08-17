@@ -21,7 +21,6 @@ switch($__IO->get('do',true)){
         );
         if(!$result){
             $template_message_id = 1;
-            print 'Arsch!';
         }
         $template_show_warning = false;
         break;
