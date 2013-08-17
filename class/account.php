@@ -41,6 +41,7 @@ class ACCOUNT{
     }
 
     private function initialize($data){
+        global $__DATABASE;
         /*
          * Initialize this class.
          *

@@ -6,6 +6,8 @@
  * database query results.
  */
 class DATABASE_RESULT{
+
+    public $success = true;
     
     private $database_type;
     private $result_obj;
@@ -19,11 +21,17 @@ class DATABASE_RESULT{
         $this->database_type = $database_type;
         $this->result_obj = $result_obj;
         $this->db_obj = $db_obj;
+
+        if(false === $result_obj)
+            $this->success = false;
     }
 
     public function __destruct(){
         if($this->database_type == 'mysql'){
-            $this->result_obj->close();
+            try{
+                if(method_exists($this->result_obj, 'close'))
+                    $this->result_obj->close();
+            } catch (Exception $e){}
         }
     }
 
@@ -51,10 +59,12 @@ class DATABASE_RESULT{
     }
 
     public function insert_id(){
-        $retval = null;
-        switch($database_type){
+        if(!$this->success) return false;
+
+        $retval = false;
+        switch($this->database_type){
             case('mysql'):
-                $retval = mysqli_insert_id($this->result_obj);
+                $retval = mysqli_insert_id($this->db_obj);
                 break;
             case('sqlite'):
                 $retval = sqlite_last_insert_rowid(
@@ -120,8 +130,8 @@ class DATABASE{
 
         $keys = $values = '';
         foreach($data_array as $key=>$value){
-            $keys .= ",'" . $key . "'";
-            $values = ",'" . $value . "'";
+            $keys .= ",`" . $key . "`";
+            $values .= ",'" . $value . "'";
         }
         $sql .= "(" . substr($keys,1) . ") VALUES(" . substr($values,1) . ")";
 
