@@ -173,20 +173,8 @@ class SESSION_MANAGER{
     public function login($username, $password){
         global $__DATABASE, $__IO, $_CONFIGS;
 
-        $result = $__DATABASE->select(
-            'accounts',
-            'username="' . md5(strtolower(trim($username))) . '"',
-            'id,authproof'
-        );
-        $row = $result->row();
-
-        $authresult = false;
-        if($row){
-            $authproof = $row['authproof'];
-            $passprover = new PASSPHRASE_PROVER();
-            $authresult = 
-                (true === $passprover->validate($password, $authproof));
-        }
+        $account = new ACCOUNT();
+        $authresult = $account->login($username, $password);
 
         if(true === $authresult){
             $this->token->generate(

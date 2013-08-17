@@ -2,11 +2,89 @@
 class ACCOUNT{
 
     private $loaded = false;
+
+    private $account_data = array(
+        'id'=>null,
+        'username_human'=>null,
+        'username_php'=>null,
+    );
     
     public function __construct($userid=null){
         global $_CONFIGS;
+        if(is_numeric($userid)) $this->initialize($userid);
+    }
 
+    private function _is_legal_username($test){
+        /*
+         * Test if a username is legal.
+         *
+         * Caution: The input is NOT trim'ed, in calculating length or
+         * testing charset.
+         */
+        global $_CONFIGS;
+        $maxlen = $_CONFIGS['limits']['account']['max_length'];
+        $minlen = $_CONFIGS['limits']['account']['min_length'];
+        $charset = $_CONFIGS['limits']['account']['allow_chars'];
 
+        $length = strlen($test);
+        if($length >= $minlen && $length <= $maxlen){
+            return ( 
+                str_replace(
+                    str_split($charset, 1),
+                    '',
+                    $test
+                ) == ''
+            );
+        }
+
+        return false;
+    }
+
+    private function initialize($data){
+        /*
+         * Initialize this class.
+         *
+         * when $data is numeric, initialize this class from a record in
+         * database with id equal to $data.
+         * when $data is an array, read it and take its data in use, designed
+         * for login and register process, which reduces a query of database.
+         */
+        $data_id = $data_username_human = $data_username_php = null;
+        $this->loaded = false;
+
+        if(is_numeric($data)){
+            $result = $__DATABASE->select(
+                'accounts',
+                'id="' . $data . '"',
+                'id,username,username_human'
+            );
+            if($row = $result->row()){
+                $data_id = $row['id'];
+                $data_username_human = base64_decode($row['username_human']);
+                $data_username_php = $row['username'];
+            }
+        } else if(is_array($data)){
+            $data_id = $data['id'];
+            $data_username_human = $data['username_human'];
+            $data_username_php = $data['username'];
+        }
+        
+        if(
+            $this->_is_legal_username($data_username_human) &&
+            (
+                md5(strtolower(trim($data_username_human))) ==
+                $data_username_php
+            )
+        ){
+            $this->account_data = array(
+                'id'=>$data_id,
+                'username_human'=>$data_username_human,
+                'username_php'=>$data_username_php,
+            );
+            $this->loaded = true;
+        }
+
+        return $this->loaded;
     }
 
     public function login($username, $password){
@@ -15,18 +93,24 @@ class ACCOUNT{
         $result = $__DATABASE->select(
             'accounts',
             'username="' . md5(strtolower(trim($username))) . '"',
-            'id,authproof'
+            'id,username_human,authproof'
         );
         $row = $result->row();
 
         $authresult = false;
         if($row){
             $authproof = $row['authproof'];
-            $passprover = new PASSPHRASE_PROVER();
             $authresult = 
-                (true === $passprover->validate($password, $authproof));
+                (true === $this->_passphrase_validate($password, $authproof));
         }
 
+        if(true === $authresult){
+            $this->initialize(array(
+                'id'=>$row['id'],
+            ));
+        }
+
+        return $authresult;
     }
 
     public function create($username, $password){
