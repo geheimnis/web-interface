@@ -21,3 +21,11 @@ Additional Requirements
 -----------------------
 * _msgpack-php_ You may have to compile out a _msgpack.so_ by yourself, and remember to modify _php.ini_.
 * _mcrypt-php_
+
+Who is the author?
+------------------
+Not a good question. The author would like to be anonymous, at least on his true identity. To identify his true name and identity, here is the evidence.
+
+    bfe28a734b1f4fbc0879db6f281ae9bb5d51d796d572a9f57ffb6c927340dd0f7d025228c9cb83e511978f70f36ce2eba12daf34a0befebf8f0bf1369857be5d
+
+This is a hash in _Whirlpool_ algorithm, joining the name of his university which gave him a bachelor's degree, his student number, his true name, and even his personal identity number.
