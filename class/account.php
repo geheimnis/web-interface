@@ -89,10 +89,11 @@ class ACCOUNT{
 
     public function login($username, $password){
         global $__DATABASE;
+        $username_phped = md5(strtolower(trim($username)));
         
         $result = $__DATABASE->select(
             'accounts',
-            'username="' . md5(strtolower(trim($username))) . '"',
+            'username="' . $username_phped . '"',
             'id,username_human,authproof'
         );
         $row = $result->row();
@@ -105,12 +106,14 @@ class ACCOUNT{
         }
 
         if(true === $authresult){
-            $this->initialize(array(
+            return $this->initialize(array(
                 'id'=>$row['id'],
+                'username'=>$username_phped,
+                'username_human'=>$row['username_human'],
             ));
         }
 
-        return $authresult;
+        return false;
     }
 
     public function create($username, $password){
