@@ -71,7 +71,7 @@ class IO{
     }
 
     public function cookie($key, $value=null){
-        if($value != null){
+        if($value !== null){
             $this->cookies[$key] = $value;
             $this->update_cookies = true;
             return $this;
@@ -84,7 +84,7 @@ class IO{
     }
 
     public function data($key, $value=null){
-        if($value != null){
+        if($value !== null){
             $this->output_data[$key] = $value;
             return $this;
         } else {

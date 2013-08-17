@@ -6,7 +6,9 @@ $__FIREWALL
     ->apply()
 ;
 
+# template logical data
 $template_show_warning = true;
+$template_tab = 'login';
 
 # login or register logic.
 switch($__IO->get('do',true)){
@@ -15,6 +17,7 @@ switch($__IO->get('do',true)){
         break;
     case 'reg':
         $template_show_warning = false;
+        $template_tab = 'reg';
         break;
     default:
         break;
@@ -22,6 +25,7 @@ switch($__IO->get('do',true)){
 
 $__IO
     ->data('option_show_warning', $template_show_warning)
+    ->data('option_tab', $template_tab)
 ;
 
 $__IO->output_HTML('login');

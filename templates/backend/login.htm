@@ -22,10 +22,12 @@ $(function(){
 {% endif %}
 
 
-    $('#operations a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    });
+    $('#operations a')
+        .click(function(e){
+            e.preventDefault();
+            $(this).tab('show');
+        })
+        .filter('[href="#{{ option_tab }}"]').tab('show');
 });
 </script>
 <style>
