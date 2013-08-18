@@ -89,13 +89,22 @@ class ACCOUNT{
     }
 
     public function login($username, $passphrase){
+        /*
+         * Account Login Process
+         *
+         * Using this function to initialize this instance by doing a login
+         * process. After verification, this instance will be initialized,
+         * and the decrypted Main Encrypt Key, which is used for encrypting
+         * all lower layer encrypting keys, is returned in String as a result.
+         * If the above process is failed, returned value is False.
+         */
         global $__DATABASE;
         $username_phped = md5(strtolower(trim($username)));
         
         $result = $__DATABASE->select(
             'accounts',
             'username="' . $username_phped . '"',
-            'id,username_human,authproof'
+            'id,username_human,authproof,'
         );
         $row = $result->row();
 
@@ -109,11 +118,39 @@ class ACCOUNT{
             );
 
         if(true === $authresult){
-            return $this->initialize(array(
+            if(true === $this->initialize(array(
                 'id'=>$row['id'],
                 'username'=>$username_phped,
                 'username_human'=>$row['username_human'],
-            ));
+            ))){
+                # Try to decrypt Main Encrypt Key using user's passphrase.
+                #
+                # If failed, a new Main Encrypt Key will be created, and
+                # then returned as result, at the same time encrypted using
+                # current user passphrase and stored.
+                # In this case, all store encrypted data will also be erased,
+                # since their corresponding Main Encrypt Key is already lost.
+                $credentials_encrypted = $row['credentials_key'];
+                $cipher = new CIPHER($passphrase);
+
+                if(false === $credential = $cipher->decrypt(
+                    $credentials_encrypted
+                )){
+                    # failed to decrypt
+                    $credential = '';
+                    for($i=0;$i<256;$i++) $credential .= chr(rand(0,255));
+                    # port back to account storage
+                    $__DATABASE->update(
+                        'accounts',
+                        array(
+                            'credentials_key'=>$cipher->encrypt($credential),
+                            'credentials_data'=>'',
+                        ),
+                        'id="' . $row['id'] . '"'
+                    );
+                }
+                return $credential;
+            }
         }
 
         return false;

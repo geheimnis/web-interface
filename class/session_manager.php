@@ -19,7 +19,7 @@ class TOKEN{
         }
     }
 
-    public function issue($account_instance){
+    public function issue($account_instance, $credential_decrypted){
         global $_CONFIGS, $__DATABASE, $__IO;
 
         $userid = $account_instance->get('id');
@@ -32,6 +32,15 @@ class TOKEN{
         $encrypt_key_server = sha1(substr($random,0,32));
         $encrypt_key_client = sha1(substr($random,32,32));
         $discard_key = sha1(substr($random, 64, 32));
+        $encrypt_key = $this->_derive_encrypt_key(
+            $encrypt_key_server,
+            $encrypt_key_client
+        );
+
+        $credential_encryptor = new CIPHER($encrypt_key);
+        $credential_new_encrypted = $credential_encryptor->encrypt(
+            $credential_decrypted
+        );
 
         $record = $__DATABASE->insert(
             'sessions',
@@ -47,6 +56,7 @@ class TOKEN{
                 'discard_key_checksum'=>md5($discard_key),
                 'expire'=>
                     time() + $_CONFIGS['security']['session']['life'],
+                'credentials_key'=>$credential_new_encrypted,
             )
         );
 
@@ -64,10 +74,7 @@ class TOKEN{
         ;
 
         $this->user_id = $userid;
-        $this->encrypt_key = $this->_derive_encrypt_key(
-            $encrypt_key_server,
-            $encrypt_key_client
-        );
+        $this->encrypt_key = $encrypt_key;
         $this->token_id = $record_id;
 
         $this->loaded = true;
@@ -166,6 +173,18 @@ class TOKEN{
     public function get_token_id(){
         return $this->token_id;
     }
+
+    public function encrypt($plaintext){
+        if(!$this->loaded) return false;
+        $encryptor = new CIPHER($this->encrypt_key);
+        return $encryptor->encrypt($plaintext);
+    }
+
+    public function decrypt($ciphertext){
+        if(!$this->loaded) return false;
+        $decryptor = new CIPHER($this->encrypt_key);
+        return $decryptor->decrypt($ciphertext);
+    }
 }
 
 class SESSION_MANAGER{
@@ -177,14 +196,22 @@ class SESSION_MANAGER{
         $this->token = new TOKEN($this);
     }
 
+    public function encrypt($plaintext){
+        return $this->token->encrypt($plaintext);
+    }
+
+    public function decrypt($ciphertext){
+        return $this->token->decrypt($ciphertext);
+    }
+
     public function login($username, $password){
         global $__DATABASE, $__IO, $_CONFIGS;
 
         $account = new ACCOUNT();
         $authresult = $account->login($username, $password);
 
-        if(true === $authresult){
-            return $this->token->issue($account);
+        if(false !== $authresult){
+            return $this->token->issue($account, $authresult);
         } else
             return false;
     }
