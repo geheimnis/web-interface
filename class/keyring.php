@@ -1,6 +1,6 @@
 <?php
 /*
- * SECURE KEYS MANAGER
+ * KEY RING
  *
  * This manager maintains a tree of credentials, used in accessing to codebook
  * database, and public-private key database, etc.
@@ -8,10 +8,16 @@
  * excesses, the user is required to re-enter the main protection password.
  * 
  */
-class SECURE_KEYS_MANAGER{
+class KEYRING{
     
     public function __construct(){
         
+    }
+
+    public function get($key_name){
+    }
+
+    public function set($key_name){
     }
 
     public function discard_all_credentials(){

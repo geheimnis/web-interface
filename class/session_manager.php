@@ -20,6 +20,11 @@ class TOKEN{
         }
     }
 
+    public function __destruct(){
+        unset($this->encrypt_key);
+        unset($this->credential_encrypted);
+    }
+
     public function issue($account_instance, $credential_decrypted){
         global $_CONFIGS, $__DATABASE, $__IO;
 
@@ -42,6 +47,7 @@ class TOKEN{
         $credential_new_encrypted = $credential_encryptor->encrypt(
             $credential_decrypted
         );
+        unset($credential_decrypted);
 
         $record = $__DATABASE->insert(
             'sessions',
@@ -184,13 +190,23 @@ class TOKEN{
 
     public function encrypt($plaintext){
         if(!$this->loaded) return false;
-        $encryptor = new CIPHER($this->encrypt_key);
+        $main_decryptor = new CIPHER($this->encrypt_key);
+        $main_encrypt_key = $main_decryptor->decrypt(
+            $this->credential_encrypted
+        );
+        $encryptor = new CIPHER($main_encrypt_key);
+        unset($main_encrypt_key);
         return $encryptor->encrypt($plaintext);
     }
 
     public function decrypt($ciphertext){
         if(!$this->loaded) return false;
-        $decryptor = new CIPHER($this->encrypt_key);
+        $main_decryptor = new CIPHER($this->encrypt_key);
+        $main_encrypt_key = $main_decryptor->decrypt(
+            $this->credential_encrypted
+        );
+        $decryptor = new CIPHER($main_encrypt_key);
+        unset($main_encrypt_key);
         return $decryptor->decrypt($ciphertext);
     }
 }

@@ -19,7 +19,10 @@ class CIPHER{
             0,
             mcrypt_get_key_size($this->ALGORITHM, $this->OPERATE_MODE)
         );
-    
+    }
+
+    public function __destruct(){
+        unset($this->key);
     }
 
     public function encrypt($plaintext){
@@ -46,6 +49,7 @@ class CIPHER{
             $this->OPERATE_MODE,
             $iv
         );
+        unset($plaintext);
 
         $ciphertext = $iv . chr($padding_length + 1) . $checksum . $ciphertext;
         
