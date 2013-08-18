@@ -143,7 +143,7 @@ class DATABASE{
 
         $sets = '';
         foreach($set as $key=>$value){
-            $sets .= ",'" . $key . "' = '" . $value . "'";
+            $sets .= ",`" . $key . "`='" . $value . "'";
         }
         $sql .= substr($sets,1);
 

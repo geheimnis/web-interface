@@ -104,7 +104,7 @@ class ACCOUNT{
         $result = $__DATABASE->select(
             'accounts',
             'username="' . $username_phped . '"',
-            'id,username_human,authproof,'
+            'id,username,username_human,authproof,credentials_key'
         );
         $row = $result->row();
 
@@ -132,18 +132,21 @@ class ACCOUNT{
                 # since their corresponding Main Encrypt Key is already lost.
                 $credentials_encrypted = $row['credentials_key'];
                 $cipher = new CIPHER($passphrase);
+                $credential = false;
+                if($credentials_encrypted){
+                    $credential = $cipher->decrypt($credentials_encrypted);
+                }
 
-                if(false === $credential = $cipher->decrypt(
-                    $credentials_encrypted
-                )){
+                if(false === $credential){
                     # failed to decrypt
                     $credential = '';
                     for($i=0;$i<256;$i++) $credential .= chr(rand(0,255));
+                    $ciphertext = $cipher->encrypt($credential);
                     # port back to account storage
                     $__DATABASE->update(
                         'accounts',
                         array(
-                            'credentials_key'=>$cipher->encrypt($credential),
+                            'credentials_key'=>$ciphertext,
                             'credentials_data'=>'',
                         ),
                         'id="' . $row['id'] . '"'
