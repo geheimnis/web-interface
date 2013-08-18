@@ -12,11 +12,11 @@ class TOKEN{
     public function __construct($session_manager){
         global $__IO;
         $this->session_manager = $session_manager;
-        if($__IO->cookie('token'))
+        if($__IO->cookie('token')){
             $this->_load_token(
-                $__IO->cookie('token'),
-                $this->session_manager
+                $__IO->cookie('token')
             );
+        }
     }
 
     public function issue($account_instance){
@@ -112,24 +112,26 @@ class TOKEN{
 
                     $query_result = $__DATABASE->select(
                         'sessions',
-                        'id="' . $token_id . '"'
+                        'id="' . $token_id . '"',
+                        '*'
                     );
                     if($row = $query_result->row()){
-                        $userid = $row['userid'];
-                        $encrypt_key_server = $row['encrypt_key_server'];
-                        $encrypt_key_checksum =
-                            $row['encrypt_key_client_checksum'];
-                        $encrypt_key_checksum_test = hash_hmac(
-                            'sha1',
-                            $encrypt_key_client,
-                            $_CONFIGS['security']['session']['sign_key']
-                        );
+                        if($row['expire'] > time()){
+                            $userid = $row['userid'];
+                            $encrypt_key_server = $row['encrypt_key_server'];
+                            $encrypt_key_checksum =
+                                $row['encrypt_key_client_checksum'];
+                            $encrypt_key_checksum_test = hash_hmac(
+                                'sha1',
+                                $encrypt_key_client,
+                                $_CONFIGS['security']['session']['sign_key']
+                            );
 
-                        $loaded = (
-                            $encrypt_key_checksum ==
-                            $encrypt_key_checksum_test
-                        );
-
+                            $loaded = (
+                                $encrypt_key_checksum ==
+                                $encrypt_key_checksum_test
+                            );
+                        }
                     }
                 }
             }
