@@ -8,6 +8,7 @@ class TOKEN{
     private $user_id = false;
     private $encrypt_key = false;
     private $token_id = false;
+    private $credential_encrypted = false;
     
     public function __construct($session_manager){
         global $__IO;
@@ -76,6 +77,7 @@ class TOKEN{
         $this->user_id = $userid;
         $this->encrypt_key = $encrypt_key;
         $this->token_id = $record_id;
+        $this->credential_encrypted = $credential_new_encrypted;
 
         $this->loaded = true;
 
@@ -99,8 +101,12 @@ class TOKEN{
     private function _load_token($token){
         global $__DATABASE, $_CONFIGS;
 
-        $userid = $token_id = $encrypt_server_key = $encrypt_client_key =
-            false;
+        $userid 
+            = $token_id 
+            = $encrypt_server_key
+            = $encrypt_client_key
+            = $credentials_key 
+        = false;
         $loaded = false;
 
         try{
@@ -133,6 +139,7 @@ class TOKEN{
                                 $encrypt_key_client,
                                 $_CONFIGS['security']['session']['sign_key']
                             );
+                            $credentials_key = $row['credentials_key'];
 
                             $loaded = (
                                 $encrypt_key_checksum ==
@@ -152,6 +159,7 @@ class TOKEN{
                 $encrypt_key_client
             );
             $this->token_id = $token_id;
+            $this->credential_encrypted = $credentials_key;
             $this->loaded = true;
             return true;
         } else
