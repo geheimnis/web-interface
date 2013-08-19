@@ -15,6 +15,10 @@ class KEYRING{
     }
 
     public function get($key_name){
+        global $__DATABASE;
+        if(false !== $user_id = $this->_get_user_id()){
+            
+        }
     }
 
     public function set($key_name){
@@ -27,6 +31,13 @@ class KEYRING{
          * This is necessary, to discard all stored credentials as quickly as
          * possible.
          */
+    }
+
+    private function _get_user_id(){
+        global $__SESSION_MANAGER;
+        if($__SESSION_MANAGER->token !== null)
+            return $__SESSION_MANAGER->token->get_user_id();
+        return false;
     }
 
 }

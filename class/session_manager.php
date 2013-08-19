@@ -167,6 +167,15 @@ class TOKEN{
             $this->token_id = $token_id;
             $this->credential_encrypted = $credentials_key;
             $this->loaded = true;
+
+            $__DATABASE->update(
+                'sessions',
+                array(
+                    'expire'=>
+                        time() + $_CONFIGS['security']['session']['life'],
+                ),
+                'id="' . $token_id . '"'
+            );
             return true;
         } else
             return false;
