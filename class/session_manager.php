@@ -50,6 +50,11 @@ class TOKEN{
         );
         unset($credential_decrypted);
 
+        $__DATABASE->delete(
+            'sessions',
+            'userid="' . $userid . '"'
+        );
+
         $record = $__DATABASE->insert(
             'sessions',
             array(
