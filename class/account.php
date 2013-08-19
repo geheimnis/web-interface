@@ -98,13 +98,13 @@ class ACCOUNT{
          * all lower layer encrypting keys, is returned in String as a result.
          * If the above process is failed, returned value is False.
          */
-        global $__DATABASE;
+        global $__DATABASE,$_CONFIGS;
         $username_phped = md5(strtolower(trim($username)));
         
         $result = $__DATABASE->select(
             'accounts',
             'username="' . $username_phped . '"',
-            'id,username,username_human,authproof,credentials_key'
+            '*'
         );
         $row = $result->row();
 
@@ -148,9 +148,24 @@ class ACCOUNT{
                         array(
                             'credentials_key'=>$ciphertext,
                             'credentials_data'=>'',
+                            'credentials_key_checksum'=>sha1($credential),
                         ),
                         'id="' . $row['id'] . '"'
                     );
+                } else {
+                    if(
+                        $row['credentials_key_checksum'] != 
+                        ($credential_checksum = sha1($credential))
+                    ){
+                        $__DATABASE->update(
+                            'accounts',
+                            array(
+                                'credentials_key_checksum'=>
+                                    $credential_checksum,
+                            ),
+                            'id="' . $row['id'] . '"'
+                        );
+                    }
                 }
                 return $credential;
             }

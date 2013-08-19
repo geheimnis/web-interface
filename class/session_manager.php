@@ -9,6 +9,7 @@ class TOKEN{
     private $encrypt_key = false;
     private $token_id = false;
     private $credential_encrypted = false;
+    private $main_encrypt_key_hash = false;
     
     public function __construct($session_manager){
         global $__IO;
@@ -195,6 +196,22 @@ class TOKEN{
 
     public function get_token_id(){
         return $this->token_id;
+    }
+
+    public function get_main_encrypt_key_hash(){
+        if(!$this->loaded) return false;
+        if(false !== $this->main_encrypt_key_hash)
+            return $this->main_encrypt_key_hash;
+
+        $main_decryptor = new CIPHER($this->encrypt_key);
+        $main_encrypt_key = $main_decryptor->decrypt(
+            $this->credential_encrypted
+        );
+
+        $this->main_encrypt_key_hash = sha1($main_encrypt_key);
+        unset($main_encrypt_key);
+
+        return $this->main_encrypt_key_hash;
     }
 
     public function encrypt($plaintext){
