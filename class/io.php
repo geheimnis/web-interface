@@ -31,7 +31,10 @@ class IO{
         # prelimary decision of local visit. NOT reliable.
         $this->flags['local_visit'] = (
             ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') &&
-            (substr($_SERVER['HTTP_HOST'],0,9) == 'localhost')
+            (
+                substr($_SERVER['HTTP_HOST'],0,9) == 'localhost' ||
+                substr($_SERVER['HTTP_HOST'],0,9) == '127.0.0.1'
+            )
         );
 
         # read

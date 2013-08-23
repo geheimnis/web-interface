@@ -5,7 +5,11 @@ class CORE_COMMAND{
     
     public function __construct(){
         global $_CONFIGS;
-        $basepath = trim($_CONFIGS['geheimnis']['core_path']);
+        $basepath = trim(
+            $_CONFIGS['geheimnis']['config_path'] .
+            '/' .
+            $_CONFIGS['geheimnis']['core_relpath']
+        );
 
         $empty_leading = 
             (substr($basepath,0,1) == '/')?
