@@ -30,7 +30,7 @@ class TASK_MANAGER{
     }
 
     private function refresh_task_overview(){
-        global $_CONFIGS;
+        global $_CONFIGS, $__DATABASE;
         if(!$this->ready) return false;
 
         $cache_life = $_CONFIGS['performance']['tasks']['cache_life'];
@@ -43,14 +43,14 @@ class TASK_MANAGER{
             $result = $__DATABASE->select(
                 'tasks',
                 'user_id="' . $this->user_id . '"',
-                'id,created_time,description,read',
+                'id,created_time,description,have_read',
                 'ORDER BY created_time LIMIT ' . $max_tasks
             );
             $this->tasks_overview = $result->all();
 
             $result = $__DATABASE->select(
                 'tasks',
-                'user_id="' . $this->user_id . '" AND read=0',
+                'user_id="' . $this->user_id . '" AND have_read=0',
                 'id,created_time,description',
                 'ORDER BY created_time LIMIT ' . $max_tasks
             );

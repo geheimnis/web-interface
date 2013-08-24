@@ -10,10 +10,11 @@ var session = {
 
     ajax: function(){
         setTimeout('session.ajax()', 1500);
-        $.get('ajax.php', {}, session.ajaxHandler);
+        $.getJSON('ajax.php', {}, session.ajaxHandler);
     },
 
     ajaxHandler: function(data, txtStatus, jqXHR){
+        navbar.ajaxHandler(data['navbar']);
     },
 
 };
