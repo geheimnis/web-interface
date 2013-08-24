@@ -3,7 +3,9 @@ var session = {
     data: {},
 
     initialize: function(){
-        setTimeout('session.ajax()', 1500);
+        $(function(){
+            session.ajax();
+        });
     },
 
     ajax: function(){
@@ -15,7 +17,8 @@ var session = {
     },
 
     ajaxHandler: function(data, txtStatus, jqXHR){
-        document.write('got');
     },
 
 };
+
+session.initialize();

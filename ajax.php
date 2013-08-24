@@ -9,5 +9,6 @@ $__FIREWALL
 $task_manager = new TASK_MANAGER();
 
 $__IO
+    ->data('test','test')
     ->output_JSON()
 ;
