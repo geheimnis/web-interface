@@ -31,6 +31,7 @@ $(function(){
     $('#ui').show();
 {% endif %}
 
+{% if option_tab != 'redirect' %}
     $('#operations a')
         .click(function(e){
             e.preventDefault();
@@ -39,6 +40,7 @@ $(function(){
         })
         .filter('[href="#{{ option_tab }}"]').tab('show')
     ;
+{% endif %}
 
 {% if option_alert_message > 0 %}
     $('#alertbox')
@@ -60,6 +62,15 @@ $(function(){
 </div>
 <div id="root" class="container">
     <h1>登录 - Geheimnis系统核心界面</h1>
+{% if option_tab == 'redirect' %}
+    <div class="alert alert-success">
+        您已经成功登录。页面将自动跳转到首页。您也可以<a href="index.php" class="alert-link">手动跳转</a>。<br />
+        <strong>如果跳转后又返回登录页面，请检查Cookies设置。</strong>
+        <script>
+            setTimeout('window.location.href="index.php"', 3000);
+        </script>
+    </div>
+{% else %}
 
     <div id="secwarn" class="alert alert-info">
       <h3>安全警告</h3> 
@@ -135,6 +146,8 @@ $(function(){
         </div>
     
     </div>
+
+{% endif %}
 
 </div>
 </body>

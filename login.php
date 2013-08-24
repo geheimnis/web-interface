@@ -21,6 +21,8 @@ switch($__IO->get('do',true)){
         );
         if(!$result){
             $template_message_id = 1;
+        } else {
+            $template_tab = 'redirect';
         }
         $template_show_warning = false;
         break;
@@ -54,6 +56,8 @@ switch($__IO->get('do',true)){
         $template_show_warning = false;
         break;
     default:
+        if($__SESSION_MANAGER->token->is_loaded() === true)
+            $template_tab = 'redirect';
         break;
 }
 
