@@ -15,6 +15,7 @@ var session = {
     },
 
     ajaxHandler: function(data, txtStatus, jqXHR){
+        document.write('got');
     },
 
 };
