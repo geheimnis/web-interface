@@ -1,4 +1,4 @@
-<?
+<?php
 class TASK_MANAGER{
 
     private $ready = false;
@@ -30,13 +30,11 @@ class TASK_MANAGER{
     }
 
     private function refresh_task_overview(){
-                'user_id="' . $this->user_id . '"'
         global $_CONFIGS;
         if(!$this->ready) return false;
 
         $cache_life = $_CONFIGS['performance']['tasks']['cache_life'];
         $max_tasks = $_CONFIGS['performance']['tasks']['max_tasks_overview'];
-                'user_id="' . $this->user_id . '"'
         $nowtime = time();
 
         $this->tasks_overview = $this->tasks_unread_overview = array();

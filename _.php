@@ -17,3 +17,4 @@ require("$_INCPATH/class/keyring.php");
 require("$_INCPATH/class/core_command.php");
 require("$_INCPATH/class/account.php");
 require("$_INCPATH/class/firewall.php");
+require("$_INCPATH/class/task_manager.php");

@@ -1,4 +1,4 @@
-<?
+<?php
 $_CONFIGS['performance'] = array(
     'tasks'=>array(
         'cache_life'=>30,

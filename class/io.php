@@ -51,7 +51,6 @@ class IO{
     }
 
     public function output_JSON(){
-        $this->_headers_write();
         $this->_cookies_write();
         $this->_output_JSON();
     }
@@ -205,14 +204,19 @@ class IO{
     }
 
     private function _output_JSON(){
-        if($this->deny_access) return;
+        global $__SESSION_MANAGER;
+        if($this->deny_access){
+            echo "{}";
+            return;
+        };
 
         if(!(
             $this->forced_login &&
             $__SESSION_MANAGER->token->is_loaded() === false
         )){
             echo json_encode($this->output_data);
-        }
+        } else
+            echo "{}";
     }
 
     private function _output_HTML($page_name){
