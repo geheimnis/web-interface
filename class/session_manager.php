@@ -120,6 +120,7 @@ class TOKEN{
             = $credentials_key 
         = false;
         $loaded = false;
+        $be_serious = false; # when took serious, will remove invalid token.
 
         try{
             $parsed_token = explode('*', $token);
@@ -127,6 +128,8 @@ class TOKEN{
             $client_key_encrypted = $parsed_token[1];
 
             if(is_numeric($token_id)){
+                $be_serious = true;
+
                 $client_key_decryptor = new CIPHER(
                     $this->session_manager->user_agent_pattern()
                 );
@@ -183,8 +186,15 @@ class TOKEN{
                 'id="' . $token_id . '"'
             );
             return true;
-        } else
+        } else {
+            if($be_serious){
+                $__DATABASE->delete(
+                    'sessions',
+                    'id="' . $token_id . '"'
+                );
+            }
             return false;
+        }
     }
 
     private function _derive_encrypt_key($server_key, $client_key){

@@ -9,7 +9,7 @@ $_CONFIGS['security'] = array(
     'session'=>array(
         'id_hash_algorithm'=>'sha1',
         'sign_key'=>'TEST-ONLY-SESSION-SIGN-KEY',
-        'life'=>1800,
+        'life'=>300, # when idle
         'allow_new_register'=>true,
     ),
 );
