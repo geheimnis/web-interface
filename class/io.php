@@ -180,21 +180,26 @@ class IO{
             $cookie_check,
             $cookie_expire
         );
+
+        return true;
     }
 
     private function _headers_write(){
         global $__SESSION_MANAGER;
-        if($this->deny_access)
+        if($this->deny_access){
             header('HTTP/1.1 401 Unauthorized', true, 401);
-        else if($this->forced_login){
+            return false;
+        } else if($this->forced_login){
             if($__SESSION_MANAGER->token->is_loaded() === false){
                 header("Location: login.php");
+                return false;
             }
         }
+        return true;
     }
 
     private function _output_HTML($page_name){
-        global $_CONFIGS;
+        global $_CONFIGS,$__SESSION_MANAGER;
 
         $template_path = 
             $this->configs['INCPATH'] .
@@ -206,7 +211,10 @@ class IO{
         else
             $page_name = 'index';
 
-        if(!$this->forced_login){
+        if(!(
+            $this->forced_login &&
+            $__SESSION_MANAGER->token->is_loaded() === false
+        )){
             $loader = new Twig_Loader_Filesystem($template_path);
             $twig = new Twig_Environment($loader, array(
                 /* 'cache'=>
