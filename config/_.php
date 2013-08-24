@@ -7,6 +7,7 @@ require("$_CONFIGS_INCPATH/template.php");
 require("$_CONFIGS_INCPATH/names.php");
 require("$_CONFIGS_INCPATH/limits.php");
 require("$_CONFIGS_INCPATH/database.php");
+require("$_CONFIGS_INCPATH/performance.php");
 
 # overwrites some values from global system control
 require("$_CONFIGS_INCPATH/geheimnis.php");
