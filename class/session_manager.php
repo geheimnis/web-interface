@@ -286,7 +286,6 @@ class SESSION_MANAGER{
         $wanted = array(
             'REMOTE_ADDR',
             'HTTP_USER_AGENT',
-            'HTTP_ACCEPT',
             'HTTP_ACCEPT_LANGUAGE',
             'HTTP_ACCEPT_ENCODING',
             'HTTP_DNT',
