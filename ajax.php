@@ -8,3 +8,6 @@ $__FIREWALL
 
 $task_manager = new TASK_MANAGER();
 
+$__IO
+    ->output_JSON()
+;

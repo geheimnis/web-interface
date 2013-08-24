@@ -50,6 +50,12 @@ class IO{
         $this->_output_HTML($page_name);
     }
 
+    public function output_JSON(){
+        $this->_headers_write();
+        $this->_cookies_write();
+        $this->_output_JSON();
+    }
+
     public function flag($query){
         if(array_key_exists($query, $this->flags)){
             return $this->flags[$query];
@@ -196,6 +202,17 @@ class IO{
             }
         }
         return true;
+    }
+
+    private function _output_JSON(){
+        if($this->deny_access) return;
+
+        if(!(
+            $this->forced_login &&
+            $__SESSION_MANAGER->token->is_loaded() === false
+        )){
+            echo json_encode($this->output_data);
+        }
     }
 
     private function _output_HTML($page_name){

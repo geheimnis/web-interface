@@ -18,11 +18,13 @@ class TASK_MANAGER{
     }
 
     public function get_tasks_count(){
+        if(!$this->ready) return false;
         $this->refresh_task_overview();
         return count($this->tasks_overview);
     }
 
     public function get_tasks_unread_count(){
+        if(!$this->ready) return false;
         $this->refresh_task_overview();
         return count($this->tasks_unread_overview);
     }
