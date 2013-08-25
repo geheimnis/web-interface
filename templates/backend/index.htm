@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Geheimnis - Backend</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="static/css/bootstrap.min.cosmo.css" rel="stylesheet" media="screen">
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
-<script>
-{% include "index.js" %}
-{% include "session.js" %}
-{% include "navbar.js" %}
-</script>
-<style>
-{% include "index.css" %}
-</style>
-</head>
-<body>
-<div id="jswarn" class="alert alert-danger">
-<strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
-</div>
-{% include "_.navbar.htm" %}
-<div id="root">
-</div>
-{% include "_.bottombar.htm" %}
-
-</body>
-</html>
+{% extends "base.htm" %}
+{% block title %}Geheimnis - Backend{% endblock %}
+{% block script %}
+    {% include "index.js" %}
+    {% include "session.js" %}
+    {% include "navbar.js" %}
+{% endblock %}
+{% block css %}
+    {% include "index.css" %}
+{% endblock %}
+{% block body %}
+    <div id="jswarn" class="alert alert-danger">
+    <strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
+    </div>
+    {% include "_.navbar.htm" %}
+    <div id="root">
+    </div>
+    {% include "_.bottombar.htm" %}
+{% endblock %}
