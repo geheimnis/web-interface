@@ -15,8 +15,6 @@ function page_switch(which, page_group){
 }
 
 $(function(){
-    $('#jswarn').hide();
-    $('#root').show();
     
     $('ul.ga-paging-links').each(function(){
         var page_group_name = $(this).attr('data-pagegroup');

@@ -8,13 +8,22 @@
 <script src="static/js/jquery.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script>
-{% block script %}{% endblock %}
+    $(function(){
+        $('#jswarn').hide();
+        $('#content').show();
+    });
+    {% block script %}{% endblock %}
 </script>
 <style>
-{% block css %}{% endblock %}
+    {% block css %}{% endblock %}
 </style>
 </head>
 <body>
-{% block body %}{% endblock %}
+    <div id="jswarn" class="alert alert-danger">
+        <strong>JavaScript没有启动。</strong>这将无法使用本页面的功能。请启用JavaScript，或者使用支持JavaScript的浏览器，然后重试。
+    </div>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

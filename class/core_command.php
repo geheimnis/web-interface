@@ -6,8 +6,8 @@ class CORE_COMMAND{
     public function __construct(){
         global $_CONFIGS;
         $basepath = trim(
-            $_CONFIGS['geheimnis']['config_path'] .
-            '/' .
+            dirname($_CONFIGS['geheimnis']['config_path']) .
+            '/../' . # exiting config/ path.
             $_CONFIGS['geheimnis']['core_relpath']
         );
 
@@ -27,6 +27,10 @@ class CORE_COMMAND{
         $this->basepath = $basepath;
     }
 
+    public function test(){
+        return $this->_execute('test.py --argument "hi"');
+    }
+
     private function _execute($command){
         $result = array();
         $command = 'python ' . $this->basepath . $command;
@@ -36,4 +40,4 @@ class CORE_COMMAND{
 
 }
 
-$__core_command = new CORE_COMMAND();
+$__CORE_COMMAND = new CORE_COMMAND();
