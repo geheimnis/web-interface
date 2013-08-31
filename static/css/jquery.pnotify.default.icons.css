@@ -1,0 +1,52 @@
+/*
+Document   : jquery.pnotify.default.icons.css
+Created on : Nov 24, 2009, 2:58:21 PM
+Author     : Hunter Perrin
+Version    : 1.2.0
+Link       : http://pinesframework.org/pnotify/
+Description:
+	Pines Icon styling for Pines Notify.
+*/
+.ui-pnotify-history-container{
+display: none;
+}
+.ui-pnotify .picon {
+background-color: transparent;
+background-repeat: no-repeat;
+background-position: center center;
+width: 17px;
+height: 17px;
+}
+.ui-pnotify-title {
+line-height: 17px;
+min-height: 17px;
+}
+.ui-pnotify.custom .ui-pnotify-container {
+	background-color: #404040 !important;
+	background-image: none !important;
+	border: none !important;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+        left: 10px;
+}
+.ui-pnotify.custom .ui-pnotify-title, .ui-pnotify.custom .ui-pnotify-text {
+	font-family: Arial, Helvetica, sans-serif !important;
+	text-shadow: 2px 2px 3px black !important;
+	font-size: 10pt !important;
+	color: #FFF !important;
+	padding-left: 50px !important;
+	line-height: 1 !important;
+	text-rendering: geometricPrecision !important;
+}
+.ui-pnotify.custom .ui-pnotify-title {
+	font-weight: bold;
+}
+.ui-pnotify.custom .ui-pnotify-icon {
+	float: left;
+}
+.ui-pnotify.custom .picon {
+	margin: 3px;
+	width: 33px;
+	height: 33px;
+}
