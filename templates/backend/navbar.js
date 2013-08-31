@@ -15,6 +15,7 @@ var navbar = {
     },
 
     ajaxHandler: function(j){
+        if(j == undefined) return;
         navbar
             .setTaskManager(j['unread_task'])
         ;
