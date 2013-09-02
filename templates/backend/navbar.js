@@ -4,7 +4,6 @@ var navbar = {
 
     elements: {
         topbar: null,
-
     },
 
     initialize: function(){

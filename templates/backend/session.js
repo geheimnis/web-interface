@@ -9,6 +9,8 @@ var session = {
     },
 
     ajax: {
+
+        _failedCount: 0,
         
         initiate: function(){
             setTimeout('session.ajax.initiate()', 1500);
@@ -30,14 +32,29 @@ var session = {
                     break;
                 }
                 if(true === data_empty){
-                    window.location.href="login.php";
+                    session.ajax.handler.error(data, txtStatus, jqXHR);
                 } else {
+                    session.ajax._failedCount = 0;
                     navbar.ajaxHandler(data['navbar']);
                 }
             },
 
             error: function(data, txtStatus, jqXHR){
-                window.location.href = 'login.php';
+                session.ajax._failedCount += 1;
+                if(session.ajax._failedCount == 1){
+                    notification.notify(
+                        '与系统的连接中断',
+                        '可能是暂时错误，也可能由于您的登录失效，或者其他网络问题导致。<br /><strong>如问题持续，30秒内将退出系统。</strong>',
+                        'error'
+                    );
+                } else if(session.ajax._failedCount == 10){
+                    notification.notify(
+                        '系统连接未恢复',
+                        '15秒后将自动退出系统'
+                    );
+                }
+                if(session.ajax._failedCount > 20)
+                    window.location.href = 'login.php';
             },
 
         },
