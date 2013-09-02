@@ -4,16 +4,8 @@
     {% include "index.js" %}
     {% include "session.js" %}
     {% include "navbar.js" %}
+    {% include "pages.js" %}
     {% include "notification.js" %}
-    $(function(){
-        $('#testbtn').click(function(){
-                    notification.notify(
-                        '与系统的连接中断',
-                        '可能是暂时错误，也可能由于您的登录失效，或者其他网络问题导致。<br /><strong>如问题持续，30秒内将退出系统。</strong>'
-                        ,'error'
-                    );
-        });
-    });
 {% endblock %}
 {% block css %}
     {% include "index.css" %}
@@ -21,8 +13,11 @@
 
 {% block content %}
     {% include "_.navbar.htm" %}
-    <div>
-        <button id="testbtn">Test</button>
+    <div id="page-area">
+        <div name="contact">{% include "page.contact.htm" %}</div>
+        <div name="codebook">{% include "page.codebook.htm" %}</div>
+        <div name="pkicomm">{% include "page.pkicomm.htm" %}</div>
+        <div name="tool">{% include "page.tool.htm" %}</div>
     </div>
     {% include "_.bottombar.htm" %}
 {% endblock %}
