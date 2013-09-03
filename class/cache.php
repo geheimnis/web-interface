@@ -44,7 +44,6 @@ class CACHE{
                     ),
                     'name="' . $query_key . '"'
                 );
-            
         }
     }
 

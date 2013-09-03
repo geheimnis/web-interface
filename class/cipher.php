@@ -36,16 +36,15 @@ class CIPHER{
             $this->OPERATE_MODE
         );
     
-        $plaintext_utf8 = utf8_encode($plaintext);
-        $checksum = hash('md5', $plaintext_utf8, true);
-        $padding_length = $block_size - strlen($plaintext_utf8) % $block_size;
+        $checksum = hash('md5', $plaintext, true);
+        $padding_length = $block_size - strlen($plaintext) % $block_size;
         if($padding_length == $block_size) $padding_length = 0;
-        $plaintext_utf8 .= str_repeat('*', $padding_length);
+        $plaintext .= str_repeat('*', $padding_length);
     
         $ciphertext = mcrypt_encrypt(
             $this->ALGORITHM,
             $this->key,
-            $plaintext_utf8,
+            $plaintext,
             $this->OPERATE_MODE,
             $iv
         );
@@ -76,7 +75,7 @@ class CIPHER{
         $checksum = substr($ciphertext_dec, $iv_size+1, 16);
         $ciphertext_dec = substr($ciphertext_dec, $iv_size+17);
 
-        $plaintext_utf8_dec = mcrypt_decrypt(
+        $plaintext = mcrypt_decrypt(
             $this->ALGORITHM,
             $this->key,
             $ciphertext_dec,
@@ -85,9 +84,9 @@ class CIPHER{
         );
 
         if($padding_length > 0)
-            $plaintext = substr($plaintext_utf8_dec, 0, -$padding_length);
+            $plaintext = substr($plaintext, 0, -$padding_length);
         else
-            $plaintext = $plaintext_utf8_dec;
+            $plaintext = $plaintext;
         $checksum_got = hash('md5', $plaintext, true);
 
         if($checksum_got == $checksum)

@@ -18,11 +18,18 @@ class KEYRING{
     public function get($key_name){
         global $__SESSION_MANAGER;
         if(!$this->_reload_keys()) return false;
-        if(array_key_exists($key_name, $this->keyring)){
+        if($this->keyring && array_key_exists($key_name, $this->keyring)){
             if(null !== $__SESSION_MANAGER->token)
                 return $__SESSION_MANAGER->token->decrypt(
                     $this->keyring[$key_name]
                 );
+        } else {
+            $new_key_raw = '';
+            for($i=0;$i<256;$i++)
+                $new_key_raw .= chr(rand(0,255));
+            $result = $this->set($key_name, $new_key_raw);
+            if(true === $result)
+                return $new_key_raw;
         }
         return false;
     }
@@ -55,7 +62,6 @@ class KEYRING{
             $fresh_checksum = $this->_get_main_key_checksum();
             if($fresh_checksum != $row['credentials_key_checksum'])
                 return !($this->disabled = true);
-
             $this->keyring = null;
             $this->keyring = json_decode(
                 $row['credentials_data'],
@@ -98,3 +104,5 @@ class KEYRING{
         return false;
     }
 }
+
+$__KEYRING = new KEYRING();
