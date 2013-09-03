@@ -7,16 +7,29 @@ class COMMAND_CONTACT{
         $this->parent = $parent;
     }
 
-    public function list_all(){
-        global $__KEYRING, $__SESSION_MANAGER;
+    public function list_all($allow_cache=true){
+        global $__KEYRING, $__CACHE;
         $access_key = bin2hex(
             $__KEYRING->get('database-access-key')
         );
 
-        $user_identifier = $this->parent->get_user_identifier();
+        if($allow_cache && $cached = $__CACHE->item('contact-list'))
+            return $cached;
+        else {
+            $user_identifier = $this->parent->get_user_identifier();
 
-        return print_r($access_key,true);
+            $command = implode(' ', array(
+                'identity.py',
+                $user_identifier,
+                $access_key,
+                'list'
+            ));
 
+            $result = $this->parent->execute($command);
+            $__CACHE->item('contact-list', $result);
+
+            return $result;
+        }
     }
 
 }
@@ -68,7 +81,7 @@ class CORE_COMMAND{
         return $this->_execute('test.py --argument "hi"');
     }
 
-    private function _execute($command){
+    public function execute($command){
         $result = array();
         $command = 'python ' . $this->basepath . $command;
         exec($command, $result);

@@ -9,12 +9,17 @@ class CACHE{
     }
 
     public function item($key, $value=null){
-        global $__DATABASE;
-        
+        global $__DATABASE, $__SESSION_MANAGER;
+
+        if($__SESSION_MANAGER->token)
+            $user_id = $__SESSION_MANAGER->token->get_user_id();
+        else
+            return false;
+
         $query_key = sha1($key);
         $result = $__DATABASE->select(
             'cache',
-            'name="' . $query_key . '"',
+            'name="' . $query_key . '" AND user_id="' . $user_id . '"',
             'value, updated_time'
         );
         $row = $result->row();
@@ -31,6 +36,7 @@ class CACHE{
                     'cache',
                     array(
                         'name'=>$query_key,
+                        'user_id'=>$user_id,
                         'value'=>base64_encode($value),
                         'updated_time'=>time(),
                     )
@@ -42,7 +48,7 @@ class CACHE{
                         'value'=>base64_encode($value),
                         'updated_time'=>time(),
                     ),
-                    'name="' . $query_key . '"'
+                    'name="' . $query_key . '" AND user_id="' . $user_id . '"'
                 );
         }
     }
