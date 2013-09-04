@@ -15,17 +15,17 @@ Geheimnis系统的每个使用者，都具有一个或多个“名片”。
     </div>
     <h3>添加联系人</h3>
     <div>
-        <form class="form-horizontal" role="form">
+        <form name="add-contact" class="form-horizontal" role="form" method="post">
             <div class="form-group">
                  <label for="title">标题</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="联系人的名称">
+                <input type="text" class="form-control" name="title" placeholder="联系人的名称" required>
             </div>
             <div class="form-group">
                  <label for="describe">描述</label>
-                <input type="text" class="form-control" id="describe" name="title" placeholder="简要描述这一名片">
+                <input type="text" class="form-control" name="describe" placeholder="简要描述这一名片">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">添加</button>
+                <button name="submit" type="button" class="btn btn-default">添加</button>
             </div>
         </form>
     </div>

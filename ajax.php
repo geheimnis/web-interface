@@ -20,7 +20,12 @@ if($core_command = $__IO->get('core', true)){
                 case 'list':
                     $result = $__CORE_COMMAND->contact->list_all(false);
                     break;
-                case 'test': break;
+                case 'test':
+                    $result = $__CORE_COMMAND->contact->test(
+                        $__IO->post('title'),
+                        $__IO->post('describe')
+                    );
+                    break;
                 case 'add': break;
                 case 'delete': break;
                 default:

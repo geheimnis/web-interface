@@ -19,6 +19,22 @@ class COMMAND_CONTACT{
             array('identity.py', $user_identifier, $access_key)
         );
     }
+    
+    public function test($title, $describe){
+        $composed = json_encode(array(
+            'title'=>$title,
+            'describe'=>$describe,
+        ));
+        return $this->parent->parse(
+            $this->parent->execute(
+                implode(' ', array(
+                    $this->_base_command(),
+                    'test',
+                    $composed
+                ))
+            )
+        );
+    }
 
     public function list_all($allow_cache=true){
         global $__CACHE;
