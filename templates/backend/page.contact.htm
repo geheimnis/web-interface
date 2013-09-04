@@ -11,7 +11,22 @@ Geheimnis系统的每个使用者，都具有一个或多个“名片”。
 <div name="main-accordion" class="gaui-accordion">
     <h3>联系人列表</h3>
     <div>
-        
+        <button type="button" class="btn btn-link">刷新列表</button>
+        <div name="list-contact-result">
+            <div name="loading-contact-table" class="alert alert-info">
+                正在加载列表，请稍等...
+            </div>
+            <table name="list-contact-table" class="table">
+                <th>
+                    <td>标题</td>
+                    <td>描述</td>
+                    <td>操作</td>
+                </th>
+            </table>
+            <div name="null-contact-table" class="alert alert-danger">
+                当前没有联系人。您可以在下面使用表单添加一个。
+            </div>
+        </div>
     </div>
     <h3>添加联系人</h3>
     <div>
