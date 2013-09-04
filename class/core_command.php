@@ -30,7 +30,7 @@ class COMMAND_CONTACT{
                 implode(' ', array(
                     $this->_base_command(),
                     'test',
-                    $composed
+                    bin2hex($composed)
                 ))
             )
         );
@@ -136,8 +136,8 @@ class CORE_COMMAND{
                         $ret[] = $item; 
                     }
                     $item = array(
-                        'signal'=>'',
-                        'code'=>'',
+                        'signal'=>$label_leading,
+                        'code'=>$label_number,
                         'data'=>array(
                             $data,
                         ),
