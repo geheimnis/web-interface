@@ -7,29 +7,34 @@ class COMMAND_CONTACT{
         $this->parent = $parent;
     }
 
-    public function list_all($allow_cache=true){
-        global $__KEYRING, $__CACHE;
+    private function _base_command(){
+        global $__KEYRING;
         $access_key = bin2hex(
             $__KEYRING->get('database-access-key')
         );
+        $user_identifier = $this->parent->get_user_identifier();
 
+        return implode(
+            ' ',
+            array('identity.py', $user_identifier, $access_key)
+        );
+    }
+
+    public function list_all($allow_cache=true){
+        global $__CACHE;
+        $result = '';
         if($allow_cache && $cached = $__CACHE->item('contact-list'))
-            return $cached;
+            $result = $cached;
         else {
-            $user_identifier = $this->parent->get_user_identifier();
-
             $command = implode(' ', array(
-                'identity.py',
-                $user_identifier,
-                $access_key,
-                'list'
+                $this->_base_command(),
+                'list',
             ));
 
             $result = $this->parent->execute($command);
             $__CACHE->item('contact-list', $result);
-
-            return $result;
         }
+        return $this->parent->parse($result);
     }
 
 }
@@ -81,11 +86,60 @@ class CORE_COMMAND{
         return $this->_execute('test.py --argument "hi"');
     }
 
+    public function parse($result){
+        $ret = $item = array();
+        $result = explode('\n', $result);
+        foreach($result as $line){
+            $line = strstr(trim($line), '[', false);
+            if($line){
+                if(false === $pos = strpos($line, ']', 0)) continue;
+                
+                $label = substr($line, 1, $pos-1);
+                $data = trim(substr($line, $pos+1));
+
+                $label_leading = substr($label, 0, 1);
+                $label_number = substr($label, 1);
+                if(!(
+                    in_array($label_leading, array('+', 'X')) &&
+                    (
+                        $label_number == '' ||
+                        is_numeric($label_number)
+                    )
+                ))
+                    continue;
+                
+                if(
+                    $item && 
+                    $item['signal'] == $label_leading &&
+                    $item['code'] == $label_number
+                ){
+                    $item['data'][] = $data;
+                } else {
+                    if($item){
+                        $item['data'] = implode('\n', $item['data']);
+                        $ret[] = $item; 
+                    }
+                    $item = array(
+                        'signal'=>'',
+                        'code'=>'',
+                        'data'=>array(
+                            $data,
+                        ),
+                    );
+                }
+            }
+        }
+        $item['data'] = implode('\n', $item['data']);
+        $ret[] = $item; 
+
+        return $ret;
+    }
+
     public function execute($command){
         $result = array();
         $command = 'python ' . $this->basepath . $command;
         exec($command, $result);
-        return implode("\n", $result);
+        return implode('\n', $result);
     }
 
 }

@@ -8,18 +8,25 @@ Geheimnis系统的每个使用者，都具有一个或多个“名片”。
 <p>
 在这一页面，您可以查看所有的名片，或者对名片添加删除。
 </p>
-<div class="gaui-accordion">
+<div name="main-accordion" class="gaui-accordion">
     <h3>联系人列表</h3>
     <div>
         
     </div>
     <h3>添加联系人</h3>
     <div>
-        <p>
-Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet
-purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor
-velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In
-suscipit faucibus urna.
-        </p>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                 <label for="title">标题</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="联系人的名称">
+            </div>
+            <div class="form-group">
+                 <label for="describe">描述</label>
+                <input type="text" class="form-control" id="describe" name="title" placeholder="简要描述这一名片">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default">添加</button>
+            </div>
+        </form>
     </div>
 </div>

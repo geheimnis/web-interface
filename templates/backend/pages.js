@@ -3,6 +3,18 @@ var pages = {
     pages: {
 
         contact: {
+            root: function(){ return $('#page-area [name="contact"]'); },
+            initialize: function(){
+                pages.pages.contact.root()
+                    .find('[name="main-accordion"]')
+                    .accordion({
+                        collapsible: true,
+                        active: false,
+                    })
+                ;
+
+                return pages.pages;
+            },
             initiate: function(){
             },
         },
@@ -33,8 +45,10 @@ var pages = {
 
     initialize: function(){
         $(function(){
+            pages.pages.
+                contact.initialize()
+            ;
             pages.show('contact');
-            $('.gaui-accordion').accordion();
         });
     },
 

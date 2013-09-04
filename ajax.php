@@ -16,8 +16,16 @@ if($core_command = $__IO->get('core', true)){
     $result = null;
     switch($core_command){
         case 'contact':
-            if($core_operand == 'list')
-                $result = $__CORE_COMMAND->contact->list_all();
+            switch($core_operand){
+                case 'list':
+                    $result = $__CORE_COMMAND->contact->list_all(false);
+                    break;
+                case 'test': break;
+                case 'add': break;
+                case 'delete': break;
+                default:
+                    break;
+            }
             break;
         default:
             break;
