@@ -8,6 +8,10 @@ var pages = {
         },
         codebook: {
             initiate: function(){
+                notification.notify(
+                    'title',
+                    'body'
+                );
             },
         },
         pkicomm: {
@@ -30,6 +34,7 @@ var pages = {
     initialize: function(){
         $(function(){
             pages.show('contact');
+            $('.gaui-accordion').accordion();
         });
     },
 
