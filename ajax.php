@@ -7,7 +7,7 @@ $__FIREWALL
     ->apply();
 
 $task_manager = new TASK_MANAGER();
-$data_navbar = array(
+$data_approval = array(
     'unread_task'=>$task_manager->get_tasks_unread_count(),
 );
 
@@ -39,7 +39,12 @@ if($core_command = $__IO->get('core', true)){
         $__IO->data($core_command, $result);
 }
 
+/*
+ * AJAX is organized as 'namespace'. A key in AJAX's root is being treated by
+ * JavaScript as a 'namespace' and passed to related handlers.
+ */
+
 $__IO
-    ->data('navbar', $data_navbar)
+    ->data('approval', $data_approval)
     ->output_JSON()
 ;

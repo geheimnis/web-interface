@@ -1,5 +1,7 @@
 var session = {
     
+    _ajaxHandlers: {},
+    
     data: {},
 
     initialize: function(){
@@ -23,6 +25,13 @@ var session = {
             });
         },
 
+        registerHandler: function(namespace, handler){
+            if(session._ajaxHandlers[namespace] == undefined)
+                session._ajaxHandlers[namespace] = [handler,];
+            else
+                session._ajaxHandlers[namespace].push(handler);
+        },
+
         handler: {
             
             success: function(data, txtStatus, jqXHR){
@@ -35,7 +44,15 @@ var session = {
                     session.ajax.handler.error(data, txtStatus, jqXHR);
                 } else {
                     session.ajax._failedCount = 0;
-                    navbar.ajaxHandler(data['navbar']);
+                    for(var namespace in data)
+                        if(session._ajaxHandlers[namespace] != undefined)
+                            for(
+                                var handler in
+                                session._ajaxHandlers[namespace]
+                            )
+                                session._ajaxHandlers[namespace][handler](
+                                    data[namespace]
+                                );
                 }
             },
 
