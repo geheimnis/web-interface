@@ -22,6 +22,7 @@ var session = {
                 dataType: 'json',
                 success: session.ajax.handler.success,
                 error: session.ajax.handler.error,
+                cache: false,
             });
         },
 
