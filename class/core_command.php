@@ -7,32 +7,15 @@ class COMMAND_CONTACT{
         $this->parent = $parent;
     }
 
-    private function _base_command(){
-        global $__KEYRING;
-        $access_key = bin2hex(
-            $__KEYRING->get('database-access-key')
-        );
-        $user_identifier = $this->parent->get_user_identifier();
-
-        return implode(
-            ' ',
-            array('identity.py', $user_identifier, $access_key)
-        );
-    }
-    
-    public function test($title, $describe){
+    public function test($title, $describe, &$result_query_id=null){
         $composed = json_encode(array(
             'title'=>$title,
             'describe'=>$describe,
         ));
-        return $this->parent->parse(
-            $this->parent->execute(
-                implode(' ', array(
-                    $this->_base_command(),
-                    'test',
-                    bin2hex($composed)
-                ))
-            )
+        return $this->parent->execute(
+            'identity-test',
+            bin2hex($composed),
+            $result_query_id
         );
     }
 
@@ -42,15 +25,10 @@ class COMMAND_CONTACT{
         if($allow_cache && $cached = $__CACHE->item('contact-list'))
             $result = $cached;
         else {
-            $command = implode(' ', array(
-                $this->_base_command(),
-                'list',
-            ));
-
-            $result = $this->parent->execute($command);
+            $result = $this->parent->execute('identity-list');
             $__CACHE->item('contact-list', $result);
         }
-        return $this->parent->parse($result);
+        return $result;
     }
 
 }
@@ -60,6 +38,21 @@ class CORE_COMMAND{
     private $basepath = null;
 
     public $contact = null;
+
+/*
+CONFIG_COMMANDS = {
+    'instant': {
+        'identity-list': {'domain': 'identity', 'operand': 'list', 'arg': False},
+        'identity-test': {'domain': 'identity', 'operand': 'test', 'arg': True},
+        'identity-delete': {'domain': 'identity', 'operand': 'delete', 'arg': True},
+        'identity-add': {'domain': 'identity', 'operand': 'add', 'arg': True},
+        'test-instant': {'domain': 'test', 'operand': 'testOperand', 'arg': False},
+    },
+    'wait': {
+        'test-wait': {'domain': 'test', 'operand': 'testOperand', 'arg': False},
+    },
+}
+*/
     
     public function __construct(){
         global $_CONFIGS;
@@ -102,9 +95,8 @@ class CORE_COMMAND{
         return $this->_execute('test.py --argument "hi"');
     }
 
-    public function parse($result){
+    private function parse($result){
         $ret = $item = array();
-        $result = explode('\n', $result);
         foreach($result as $line){
             $line = strstr(trim($line), '[', false);
             if($line){
@@ -151,11 +143,49 @@ class CORE_COMMAND{
         return $ret;
     }
 
-    public function execute($command){
+    public function execute($command_name, $arg=null, &$result_query_id=null){
+        /*
+         * Execute a command
+         *
+         * 1)Returns a string, if the command executed returns immediate
+             result.
+         * 2)Returns True, if command needs to be async queried for result. In
+         *   this case, use $result_query_id to get it.
+         * 3)Returns False, when there is an error.
+         */
+        global $__KEYRING;
+        $access_key = bin2hex(
+            $__KEYRING->get('database-access-key')
+        );
+        $user_identifier = $this->get_user_identifier();
+
+        $composed = bin2hex(
+            json_encode(
+                array(
+                    'cmd'=>$command_name,
+                    'arg'=>$arg,
+                )
+            )
+        );
+
+        $command = implode(
+            ' ',
+            array(
+                'python',
+                $this->basepath . 'invoke.py',
+                $user_identifier,
+                $access_key,
+                $composed,
+            )
+        );
+
         $result = array();
-        $command = 'python ' . $this->basepath . $command;
         exec($command, $result);
-        return implode('\n', $result);
+        
+        $parsed_result = $this->parse($result);
+
+        // XXX TODO process this result and deal with database, query id and so on!
+        return $parsed_result;
     }
 
 }
