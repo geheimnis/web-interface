@@ -7,15 +7,14 @@ class COMMAND_CONTACT{
         $this->parent = $parent;
     }
 
-    public function test($title, $describe, &$result_query_id=null){
+    public function test($title, $describe){
         $composed = json_encode(array(
             'title'=>$title,
             'describe'=>$describe,
         ));
         return $this->parent->execute(
             'identity-test',
-            bin2hex($composed),
-            $result_query_id
+            bin2hex($composed)
         );
     }
 
@@ -35,25 +34,15 @@ class COMMAND_CONTACT{
 
 class CORE_COMMAND{
     
+    private $approval_needed_commands = array(
+        'identity-delete',
+        'identity-add',
+    );
+    
     private $basepath = null;
 
     public $contact = null;
 
-/*
-CONFIG_COMMANDS = {
-    'instant': {
-        'identity-list': {'domain': 'identity', 'operand': 'list', 'arg': False},
-        'identity-test': {'domain': 'identity', 'operand': 'test', 'arg': True},
-        'identity-delete': {'domain': 'identity', 'operand': 'delete', 'arg': True},
-        'identity-add': {'domain': 'identity', 'operand': 'add', 'arg': True},
-        'test-instant': {'domain': 'test', 'operand': 'testOperand', 'arg': False},
-    },
-    'wait': {
-        'test-wait': {'domain': 'test', 'operand': 'testOperand', 'arg': False},
-    },
-}
-*/
-    
     public function __construct(){
         global $_CONFIGS;
         $basepath = trim(
@@ -143,7 +132,31 @@ CONFIG_COMMANDS = {
         return $ret;
     }
 
-    public function execute($command_name, $arg=null, &$result_query_id=null){
+    private function check_approval(&$command_name, $arg=null){
+        global $__DATABASE;
+        /*
+         * Check if needs approval
+         *
+         * if need, returns True. Else False.
+         */
+        $command_name = strtolower(trim($command_name));
+        if(in_array($command_name, $this->approval_needed_commands)){
+            
+            return true;
+        }
+        return false;
+    }
+
+    public function execute($command_name, $arg=null){
+        if(false === $this->check_approval($command_name, $arg))
+            $this->do_execute($command_name, $arg);
+    }
+
+    public function approve($id){
+#        $this->do_execute($...)
+    }
+
+    private function do_execute($command_name, $arg=null){
         /*
          * Execute a command
          *
@@ -184,8 +197,33 @@ CONFIG_COMMANDS = {
         
         $parsed_result = $this->parse($result);
 
-        // XXX TODO process this result and deal with database, query id and so on!
-        return $parsed_result;
+        if(
+            count($parsed_result) == 1 &&
+            $parsed_result[0]['code'] == '202'
+        ){
+            $result_query_id = $parsed_result[0]['data'];
+            return True;
+        } else if($parsed_result[0]['signal'] == '+')
+            return $parsed_result[0]['data'];
+        else
+            return False;
+    }
+
+    private function record_result_query_id($new_id){
+        global $__DATABASE, $__SESSION_MANAGER;
+        try{
+            $userid = $__SESSION_MANAGER->token->get_user_id();
+
+            $__DATABASE->insert(
+                'tasks',
+                array(
+                    'user_id'=>$userid,
+                    'created_time'=>time(),
+                )
+            );
+        } catch(Exception $e){
+            return False;
+        }
     }
 
 }
