@@ -127,6 +127,64 @@ class CORE_COMMAND{
         return $ret;
     }
 
+    public function optimize(){
+        global $__KEYRING;
+        $access_key = bin2hex(
+            $__KEYRING->get('database-access-key')
+        );
+        $user_identifier = $this->get_user_identifier();
+
+
+        $command = implode(
+            ' ',
+            array(
+                'python',
+                $this->basepath . 'invoke.py',
+                $user_identifier,
+                $access_key,
+                'optimize',
+            )
+        );
+
+        exec($command);
+    }
+
+    public function query($query_id){
+        global $__KEYRING;
+        $access_key = bin2hex(
+            $__KEYRING->get('database-access-key')
+        );
+        $user_identifier = $this->get_user_identifier();
+
+        $query_id = strtolower(trim($query_id));
+        if(!(
+            strlen($query_id) == 36 &&
+            str_replace(
+                str_split('0123456789-abcdef'),
+                '',
+                $query_id
+            ) == ''
+        ))
+            return false;
+        
+
+        $command = implode(
+            ' ',
+            array(
+                'python',
+                $this->basepath . 'invoke.py',
+                $user_identifier,
+                $access_key,
+                'query',
+                $query_id,
+            )
+        );
+
+        $result = array();
+        exec($command, $result);
+        return $this->parse($result);
+    }
+
     public function execute($command_name, $arg=null, &$result_query_id=null){
         /*
          * Execute a command
