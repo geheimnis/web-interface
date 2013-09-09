@@ -10,4 +10,5 @@ require("$_CLASS_INCPATH/keyring.php");
 require("$_CLASS_INCPATH/core_command.php");
 require("$_CLASS_INCPATH/account.php");
 require("$_CLASS_INCPATH/firewall.php");
+require("$_CLASS_INCPATH/task.php");
 require("$_CLASS_INCPATH/task_manager.php");

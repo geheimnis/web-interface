@@ -31,10 +31,12 @@ class TASK{
         $this->loaded = false;
 
         $database_record = array(
-            'user_id'=>$userid,
+            'user_id'=>$user_id,
             'created_time'=>time(),
+            'command_name'=>$command,
+            'command_arg'=>base64_encode($arg),
+            'result'=>'',
             'description'=>'', #XXX
-            'have_approved'=>0,
             'have_read'=>0,
             'core_result_id'=>'',
         );
@@ -51,6 +53,7 @@ class TASK{
     }
 
     public function delete(){
+        global $__DATABASE;
         if(!$this->loaded) return false;
         $__DATABASE->delete(
             'tasks',

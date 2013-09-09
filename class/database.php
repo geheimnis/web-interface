@@ -76,6 +76,24 @@ class DATABASE_RESULT{
         }
         return $retval;
     }
+
+    public function error(){
+        if(!$this->success) return true;
+
+        $retval = false;
+        switch($this->database_type){
+            case('mysql'):
+                $retval = mysqli_error($this->db_obj);
+                break;
+            case('sqlite'):
+                $retval = sqlite_error_string($this->db_obj);
+                break;
+            default:
+                break;
+        }
+        return $retval;
+        
+    }
 }
 
 /*
@@ -134,7 +152,6 @@ class DATABASE{
             $values .= ",'" . $value . "'";
         }
         $sql .= "(" . substr($keys,1) . ") VALUES(" . substr($values,1) . ")";
-
         return $this->_sql_query($sql);
     }
 

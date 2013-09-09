@@ -5,6 +5,12 @@ class TASK_MANAGER{
         'identity-delete',
         'identity-add',
     );
+    private $possible_commands = array(
+        'identity-delete',
+        'identity-add',
+        'identity-list',
+        'identity-test',
+    );
 
     private $ready = false;
     private $last_overview = 0;
@@ -24,6 +30,8 @@ class TASK_MANAGER{
 
     public function create_task($command_name, $argv=null){
         $command_name = strtolower(trim($command_name));
+        if(!in_array($command_name, $this->possible_commands)) return false;
+
         $need_approval = 
             in_array($command_name, $this->approval_needed_commands);
 
@@ -32,7 +40,9 @@ class TASK_MANAGER{
 
         if(!$need_approval){
             $new_task->approve();
-            return $new_task->get_result();
+            $result = $new_task->get_result();
+            $new_task->delete();
+            return $result;
         }
     }
 

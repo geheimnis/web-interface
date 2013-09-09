@@ -217,6 +217,7 @@ class CORE_COMMAND{
                 $this->basepath . 'invoke.py',
                 $user_identifier,
                 $access_key,
+                'run',
                 $composed,
             )
         );
