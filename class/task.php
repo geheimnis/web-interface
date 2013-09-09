@@ -66,8 +66,12 @@ class TASK{
     }
 
     public function approve(){
-        global $__CORE_COMMAND;
+        global $__CORE_COMMAND, $__DATABASE;
         if(!$this->loaded) return false;
+
+        if($this->database_record['core_result_id'] != '')
+            return false;
+
         $result_query_id = '';
 
         $command_name = $this->database_record['command_name'];
@@ -79,11 +83,54 @@ class TASK{
             $result_query_id
         );
 
+        if(true === $result){
+            # Record the query id.
+            $__DATABASE->update(
+                'tasks',
+                array(
+                    'core_result_id'=>$result_query_id,
+                ),
+                'id="' . $this->database_record['id'] . '"'
+            );
+        } else if(false !== $result){
+            $this->_save_result($result);
+        }
+
         return $result; 
     }
 
     public function get_result(){
+        global $__CORE_COMMAND, $__DATABASE;
         if(!$this->loaded) return false;
+        if($this->database_record['result'] == ''){
+            $result = $__CORE_COMMAND->query(
+                $this->database_record['core_result_id']
+            );
+
+            if($result){
+                # save result
+                $this->_save_result($result);
+            } else
+                return false;
+        } else {
+            $result = json_decode(base64_decode(
+                $this->database_record['result']
+            ));
+        }
+        return $result;
+    }
+
+    private function _save_result($result){
+        global $__DATABASE;        
+        $result = base64_encode(json_encode($result));
+        $__DATABASE->update(
+            'tasks',
+            array(
+                'result'=>$result
+            ),
+            'id="' . $this->database_record['id'] . '"'
+        );
+        $this->database_record['result'] = $result;
     }
 
     private function _load_task($record_id){
