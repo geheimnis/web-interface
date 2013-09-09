@@ -82,7 +82,7 @@ class TASK{
         $result_query_id = false;
 
         $command_name = $this->database_record['command_name'];
-        $command_argv = $this->database_record['command_arg'];
+        $command_argv = base64_decode($this->database_record['command_arg']);
 
         $result = $__CORE_COMMAND->execute(
             $command_name,

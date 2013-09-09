@@ -80,6 +80,8 @@ class CORE_COMMAND{
     }
 
     private function parse($result){
+        if(!$result) return false;
+
         $ret = $item = array();
         foreach($result as $line){
             $line = strstr(trim($line), '[', false);
@@ -224,7 +226,7 @@ class CORE_COMMAND{
 
         $result = array();
         exec($command, $result);
-        
+
         $parsed_result = $this->parse($result);
 
         if(

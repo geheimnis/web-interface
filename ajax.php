@@ -15,15 +15,19 @@ if($core_command = $__IO->get('core', true)){
     $core_operand = $__IO->get('operand', true);
     $result = null;
     switch($core_command){
-        case 'identity':
+        case 'contact':
             switch($core_operand){
                 case 'list':
                     $result = $task_manager->create_task('identity-list');
                     break;
                 case 'test':
-                    $result = $__CORE_COMMAND->contact->test(
-                        $__IO->post('title'),
-                        $__IO->post('describe')
+                    $argv = json_encode(array(
+                        'title'=>$__IO->post('title'),
+                        'describe'=>$__IO->post('describe'),
+                    ));
+                    $result = $task_manager->create_task(
+                        'identity-test',
+                        $argv
                     );
                     break;
                 case 'add': break;
