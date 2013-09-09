@@ -50,6 +50,15 @@ class TASK{
         return false;
     }
 
+    public function delete(){
+        if(!$this->loaded) return false;
+        $__DATABASE->delete(
+            'tasks',
+            'id="' . $this->database_record['id'] . '"'
+        );
+        return true;
+    }
+
     public function reject(){
         if(!$this->loaded) return false;
         if($this->database_record['core_result_id'] == ''){
