@@ -44,6 +44,8 @@ class TASK_MANAGER{
             $new_task->delete();
             return $result;
         }
+
+        return true;
     }
 
     public function get_tasks_count(){

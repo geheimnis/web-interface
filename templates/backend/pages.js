@@ -3,6 +3,13 @@ var pages = {
     handlers: {
         post_error: function(data, txtStatus, jqXHR){
         },
+
+        task_added: function(data, txtStatus, jqXHR){
+            notification.notify(
+                '新任务已经添加',
+                '请使用右上角的任务审批系统查看和批准这一任务。'
+            );
+        },
     },
 
     pages: {
@@ -11,45 +18,18 @@ var pages = {
 
             handlers: {
 
-                click_add_test: function(e){
+                click_add: function(e){
                     var serialized = pages.pages.contact.root()
                         .find('[name="add-contact"]')
                         .serialize()
                     ;
-                    function success_callback(data, txtStatus, jqXHR){
-                        pages.pages.contact.handlers.
-                            click_add_test_done_base(
-                                data,
-                                txtStatus,
-                                jqXHR,
-                                serialized
-                            )
-                        ;
-                    }
                     $.ajax({
                         type: "POST",
-                        url: 'ajax.php?core=contact&operand=test',
+                        url: 'ajax.php?core=identity&operand=add',
                         data: serialized,
-                        success: success_callback,
+                        success: pages.handlers.task_added,
                         dataType: 'json',
                     });
-                },
-
-                click_add_test_done_base: function(data, txtStatus, jqXHR, s){
-                    if(
-                        data != undefined &&
-                        data.contact != undefined &&
-                        data.contact[0] != undefined
-                    ){
-                        var got = data.contact[0];
-                        if(got.signal == '+')
-                            alert(got.data);
-                            //TODO
-                            // 使用统一的“审批系统”接收任务队列。
-                            // 不再使用其他方式处理任务。
-                            // 甚至可以考虑将上一步的请求（test计算校验值）也
-                            // 放进来。
-                    }
                 },
 
             },
@@ -66,7 +46,7 @@ var pages = {
                 ;
                 pages.pages.contact.root()
                     .find('[name="add-contact"] button[name="submit"]')
-                    .click(pages.pages.contact.handlers.click_add_test)
+                    .click(pages.pages.contact.handlers.click_add)
                 ;
 
                 return pages.pages;
