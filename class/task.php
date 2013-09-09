@@ -72,7 +72,7 @@ class TASK{
         if($this->database_record['core_result_id'] != '')
             return false;
 
-        $result_query_id = '';
+        $result_query_id = false;
 
         $command_name = $this->database_record['command_name'];
         $command_argv = $this->database_record['command_arg'];
@@ -83,8 +83,12 @@ class TASK{
             $result_query_id
         );
 
-        if(true === $result){
-            # Record the query id.
+        if(false !== $result && true !== $result){
+            $this->_save_result($result);
+            $result_query_id = '-';
+        }
+
+        if($result_query_id)
             $__DATABASE->update(
                 'tasks',
                 array(
@@ -92,9 +96,6 @@ class TASK{
                 ),
                 'id="' . $this->database_record['id'] . '"'
             );
-        } else if(false !== $result){
-            $this->_save_result($result);
-        }
 
         return $result; 
     }
