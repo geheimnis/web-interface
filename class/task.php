@@ -107,6 +107,19 @@ class TASK{
         return $result; 
     }
 
+    public function get_command_name(){
+        if(!$this->loaded) return false;
+        return $this->database_record['command_name'];
+    }
+
+    public function get_command_arg(){
+        if(!$this->loaded) return false;
+        return json_decode(
+            base64_decode($this->database_record['command_arg']),
+            true
+        );
+    }
+
     public function get_result(){
         global $__CORE_COMMAND, $__DATABASE;
         if(!$this->loaded) return false;
@@ -151,8 +164,10 @@ class TASK{
             'id="' . $record_id . '"'
         );
 
+        $row = $result->row();
+
         if(
-            $row = $result->row() &&
+            $row &&
             $row['user_id'] == $this->get_user_id()
         ){
             $this->database_record = $row;

@@ -44,15 +44,17 @@ class IO{
 
     }
 
-    public function output_HTML($page_name){
+    public function output_HTML($page_name, $suffix='.htm'){
         $this->_headers_write();
         $this->_cookies_write();
-        $this->_output_HTML($page_name);
+        $this->_output_HTML($page_name, $suffix);
+        return $this;
     }
 
     public function output_JSON(){
         $this->_cookies_write();
         $this->_output_JSON();
+        return $this;
     }
 
     public function flag($query){
@@ -119,6 +121,10 @@ class IO{
                 $this->gets[$key]
             );
         return null;
+    }
+
+    public function stop(){
+        exit();
     }
 
     private function _posts_read(){
@@ -219,7 +225,7 @@ class IO{
             echo "{}";
     }
 
-    private function _output_HTML($page_name){
+    private function _output_HTML($page_name, $suffix){
         global $_CONFIGS,$__SESSION_MANAGER;
 
         $template_path = 
@@ -245,7 +251,7 @@ class IO{
                 'debug'=>false,
             ));
 
-            $template = $twig->loadTemplate($page_name . '.htm');
+            $template = $twig->loadTemplate($page_name . $suffix);
             echo $template->render($this->output_data);
         }
     }

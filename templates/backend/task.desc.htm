@@ -1,0 +1,17 @@
+<div id="task_description">
+{% if command_name == 'identity-add' %}
+<ul>
+    <li>您即将添加一个新联系人。</li>
+    <li>联系人信息是公钥和密码本管理的唯一索引，必须完全正确。</li>
+</ul>
+<p>请复核以下信息！</p>
+<div class="well well-lg">
+<p><strong>标题</strong>{{command_arg.title}}</p>
+<p><strong>描述</strong>{{command_arg.describe}}</p>
+</div>
+<p>如可能，请核对校验值：</p>
+<div class="well well-lg">
+AAAAA BBBBB CCCCC DDDDD
+</div>
+{% endif %}
+</div>

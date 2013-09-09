@@ -1,13 +1,21 @@
 {% extends "base.htm" %}
-{% block title %}Geheimnis - Backend{% endblock %}
+{% block title %}Geheimnis - Backend - Tasks{% endblock %}
 {% block script %}
-    {% include "index.js" %}
+    {% include "task.js" %}
 {% endblock %}
 {% block css %}
-    {% include "index.css" %}
 {% endblock %}
 
 {% block content %}
-    <div id="root">
+    <div id="topbar" class="navbar navbar-fixed-top">
+      <a class="navbar-brand" href="#"><strong>Geheimnis 任务</strong></a>
+      <ul class="nav navbar-nav pull-right">
+        <li><a href="#">关闭</a></li>
+      </ul>
     </div>
+    <div style="height: 50px"></div>
+
+    
+
+    {% include "_.bottombar.htm" %}
 {% endblock %}
