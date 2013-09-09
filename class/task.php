@@ -56,21 +56,16 @@ class TASK{
             'tasks',
             'id="' . $this->database_record['id'] . '"'
         );
+        $this->loaded = false;
         return true;
     }
 
     public function reject(){
         if(!$this->loaded) return false;
-        if($this->database_record['core_result_id'] == ''){
+        if($this->database_record['core_result_id'] == '')
             # That means, this task have not been approved.
             # Because approval means immediately execution.
-            $__DATABASE->delete(
-                'tasks',
-                'id="' . $this->database_record['id'] . '"'
-            );
-            $this->loaded = false;
-            return true;
-        }
+            $this->delete();
         return false;
     }
 
