@@ -139,25 +139,11 @@ class CORE_COMMAND{
          *
          * if need, or contains error, returns True. Else False.
          */
-        try{
-            $userid = $__SESSION_MANAGER->token->get_user_id();
-            $command_name = strtolower(trim($command_name));
-            if(in_array($command_name, $this->approval_needed_commands)){
-                $__DATABASE->insert(
-                    'tasks',
-                    array(
-                        'user_id'=>$userid,
-                        'created_time'=>time(),
-                        'description'=>'', #XXX
-                        'have_approved'=>0,
-                        'have_read'=>0,
-                        'core_result_id'=>'',
-                    )
-                );
-            }
-            return True;
-        } catch(Exception $e) {
-            return True;
+        $command_name = strtolower(trim($command_name));
+        if(in_array($command_name, $this->approval_needed_commands)){
+            $new_task = new TASK();
+            $new_task->create($command_name, $arg);
+            return true;
         }
         return false;
     }
@@ -165,10 +151,6 @@ class CORE_COMMAND{
     public function execute($command_name, $arg=null){
         if(false === $this->check_approval($command_name, $arg))
             $this->do_execute($command_name, $arg);
-    }
-
-    public function approve($id){
-#        $this->do_execute($...)
     }
 
     private function do_execute($command_name, $arg=null){
