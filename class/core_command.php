@@ -34,11 +34,6 @@ class COMMAND_CONTACT{
 
 class CORE_COMMAND{
     
-    private $approval_needed_commands = array(
-        'identity-delete',
-        'identity-add',
-    );
-    
     private $basepath = null;
 
     public $contact = null;
@@ -132,28 +127,7 @@ class CORE_COMMAND{
         return $ret;
     }
 
-    private function check_approval(&$command_name, $arg=null){
-        global $__DATABASE, $__SESSION_MANAGER;
-        /*
-         * Check if needs approval
-         *
-         * if need, or contains error, returns True. Else False.
-         */
-        $command_name = strtolower(trim($command_name));
-        if(in_array($command_name, $this->approval_needed_commands)){
-            $new_task = new TASK();
-            $new_task->create($command_name, $arg);
-            return true;
-        }
-        return false;
-    }
-
-    public function execute($command_name, $arg=null){
-        if(false === $this->check_approval($command_name, $arg))
-            $this->do_execute($command_name, $arg);
-    }
-
-    private function do_execute($command_name, $arg=null){
+    public function execute($command_name, $arg=null, &$result_query_id=null){
         /*
          * Execute a command
          *
@@ -204,23 +178,6 @@ class CORE_COMMAND{
             return $parsed_result[0]['data'];
         else
             return False;
-    }
-
-    private function record_result_query_id($new_id){
-        global $__DATABASE, $__SESSION_MANAGER;
-        try{
-            $userid = $__SESSION_MANAGER->token->get_user_id();
-
-            $__DATABASE->insert(
-                'tasks',
-                array(
-                    'user_id'=>$userid,
-                    'created_time'=>time(),
-                )
-            );
-        } catch(Exception $e){
-            return False;
-        }
     }
 
 }

@@ -1,6 +1,11 @@
 <?php
 class TASK_MANAGER{
 
+    private $approval_needed_commands = array(
+        'identity-delete',
+        'identity-add',
+    );
+
     private $ready = false;
     private $last_overview = 0;
 
@@ -14,6 +19,20 @@ class TASK_MANAGER{
         if(false !== $user_id = $__SESSION_MANAGER->token->get_user_id()){
             $this->user_id = $user_id;
             $this->ready = true;
+        }
+    }
+
+    public function create_task($command_name, $argv=null){
+        $command_name = strtolower(trim($command_name));
+        $need_approval = 
+            in_array($command_name, $this->approval_needed_commands);
+
+        $new_task = new TASK();
+        $new_task->create($command_name, $argv);
+
+        if(!$need_approval){
+            $new_task->approve();
+            return $new_task->get_result();
         }
     }
 
