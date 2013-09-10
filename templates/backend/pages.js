@@ -25,7 +25,7 @@ var pages = {
                     ;
                     $.ajax({
                         type: "POST",
-                        url: 'ajax.php?core=identity&operand=add',
+                        url: 'api.php?core_command=identity-add',
                         data: serialized,
                         success: pages.handlers.task_added,
                         dataType: 'json',

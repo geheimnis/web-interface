@@ -11,47 +11,6 @@ $data_approval = array(
     'unread_task'=>$task_manager->get_tasks_unread_count(),
 );
 
-if($core_command = $__IO->get('core', true)){
-    $core_operand = $__IO->get('operand', true);
-    $result = null;
-    switch($core_command){
-        case 'identity':
-            switch($core_operand){
-                case 'list':
-                    $result = $task_manager->create_task('identity-list');
-                    break;
-                case 'test':
-                    $argv = json_encode(array(
-                        'title'=>$__IO->post('title'),
-                        'describe'=>$__IO->post('describe'),
-                    ));
-                    $result = $task_manager->create_task(
-                        'identity-test',
-                        $argv
-                    );
-                    break;
-                case 'add':
-                    $argv = json_encode(array(
-                        'title'=>$__IO->post('title'),
-                        'describe'=>$__IO->post('describe'),
-                    ));
-                    $result = $task_manager->create_task(
-                        'identity-add',
-                        $argv
-                    );
-                    break;
-                case 'delete': break;
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
-    if($result)
-        $__IO->data($core_command, $result);
-}
-
 /*
  * AJAX is organized as 'namespace'. A key in AJAX's root is being treated by
  * JavaScript as a 'namespace' and passed to related handlers.

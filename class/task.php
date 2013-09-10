@@ -25,9 +25,15 @@ class TASK{
             $this->_load_task($record_id);
     }
 
-    public function create($command, $arg=null){
+    public function create($user_id, $command, $arg=null){
+        /*
+         * WARNING
+         *
+         * NEVER call this method except from TASK_MANAGER!
+         * Otherwise there can be a deadly security problem.
+         */
         global $__DATABASE;
-        if(false === $user_id = $this->get_user_id()) return false;
+        if(!is_numeric($user_id)) return false;
         $this->loaded = false;
 
         $database_record = array(
@@ -36,7 +42,6 @@ class TASK{
             'command_name'=>$command,
             'command_arg'=>base64_encode($arg),
             'result'=>'',
-            'description'=>'', #XXX
             'have_read'=>0,
             'core_result_id'=>'',
         );

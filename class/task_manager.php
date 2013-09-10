@@ -28,15 +28,28 @@ class TASK_MANAGER{
         }
     }
 
-    public function create_task($command_name, $argv=null){
+    public function create_task($user_id, $command_name, $argv=null){
+        /*
+         * One can create a task, even if he is not logged in. Here user_id
+         * is the user, to which the task assigned to.
+         *
+         * According to the code in class/task.php, anonymously created tasks
+         * can be stored and approved immediately. But to reload this stored
+         * task, requires login.
+         *
+         * But for logged in users, user_id will be overwrited to his own
+         * user_id. In other words, he will not be able to create tasks for
+         * other users.
+         */
         $command_name = strtolower(trim($command_name));
         if(!in_array($command_name, $this->possible_commands)) return false;
+        if($this->ready) $user_id = $this->user_id;
 
         $need_approval = 
             in_array($command_name, $this->approval_needed_commands);
 
         $new_task = new TASK();
-        $new_task->create($command_name, $argv);
+        $new_task->create($user_id, $command_name, $argv);
 
         if(!$need_approval){
             $new_task->approve();
@@ -74,7 +87,7 @@ class TASK_MANAGER{
             $result = $__DATABASE->select(
                 'tasks',
                 'user_id="' . $this->user_id . '"',
-                'id,created_time,description,have_read',
+                'id,created_time,have_read',
                 'ORDER BY created_time LIMIT ' . $max_tasks
             );
             $this->tasks_overview = $result->all();
@@ -82,7 +95,7 @@ class TASK_MANAGER{
             $result = $__DATABASE->select(
                 'tasks',
                 'user_id="' . $this->user_id . '" AND have_read=0',
-                'id,created_time,description',
+                'id,created_time',
                 'ORDER BY created_time LIMIT ' . $max_tasks
             );
             $this->tasks_unread_overview = $result->all();
